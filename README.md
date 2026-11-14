@@ -47,6 +47,10 @@ Sigue las pequeñas marcas doradas. Las indicaciones superiores muestran el obje
 - `assets/art/`: ilustraciones, retratos y sprites incluidos en el proyecto.
 - `tests/smoke.gd`: comprobaciones integradas de ambos recorridos, reinicio, bloqueos, colisiones y accesibilidad básica.
 
+## Aportes y recursos del equipo
+
+Los archivos de referencia aportados anteriormente por el equipo se conservan en la raíz del repositorio: mapas de la base, diseños de las salas, tripulación, nodos interactivos, efectos de sonido, música, `frames_items.zip` e `icono_hud.gd`. El proyecto jugable utiliza sus propios recursos dentro de `assets/`, mientras estos materiales permanecen disponibles para las siguientes iteraciones.
+
 ## Validación
 
 Desde PowerShell, en esta carpeta:
