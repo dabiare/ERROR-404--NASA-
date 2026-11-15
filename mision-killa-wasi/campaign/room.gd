@@ -35,7 +35,19 @@ func wall(rect: Rect2) -> void:
  add_child(body)
 
 func add_door(to: String, at: Vector2) -> void:
- doors.append({"id":"door_"+to,"to":to,"title":Catalog.ROOMS[to],"at":at,"door":true})
+ var caption:=Label.new()
+ caption.text=Catalog.ROOMS[to]
+ caption.size=Vector2(190,60)
+ caption.position=at+Vector2(-95,-90)
+ caption.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+ caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ caption.add_theme_font_size_override('font_size',17)
+ caption.add_theme_color_override('font_shadow_color',Color('102234'))
+ caption.add_theme_constant_override('shadow_outline_size',3)
+ caption.modulate.a=0
+ caption.z_index=950
+ add_child(caption)
+ doors.append({"id":"door_"+to,"to":to,"title":Catalog.ROOMS[to],"at":at,"door":true,"caption":caption})
 
 func build_room() -> void:
  var background:=Sprite2D.new()
@@ -261,15 +273,25 @@ func _process(delta: float) -> void:
   state_labels[id].text=value if value!="DISPONIBLE PARA CONSULTA" else ""
   if id=="vent" and Mission.emergency=="air" or id=="rover" and Mission.emergency=="rover": state_labels[id].modulate=Color("ffae87")
   else: state_labels[id].modulate=Color.WHITE
+ for door in doors:
+  var near:bool=hero.position.distance_to(door.at)<120
+  door.caption.modulate.a=move_toward(door.caption.modulate.a,1.0 if near else 0.0,delta*5)
+  door.caption.position.y=clampf(door.at.y-90,115,575)+((1.0-door.caption.modulate.a)*8 if not Mission.reduced_motion else 0.0)
  queue_redraw()
 
 func _draw() -> void:
  var font:=ThemeDB.fallback_font
+ if room_id=='bedroom' and Mission.optional.get('bedroom_drawings',false):
+  draw_string(font,Vector2(590,225),'★  ☾  ★',HORIZONTAL_ALIGNMENT_LEFT,-1,26,Color('f6ca68'))
+ if room_id=='crops' and Mission.optional.get('plant_growth',false):
+  draw_line(Vector2(920,400),Vector2(920,345),Color('74e1c6'),5)
+  draw_circle(Vector2(908,360),10,Color('82c965'));draw_circle(Vector2(932,350),10,Color('82c965'))
  for d in doors:
   var selected: bool=nearest.get("id","")==d.id
-  var rect:=Rect2(d.at-Vector2(75,26),Vector2(150,52))
+  var rect:=Rect2(d.at-Vector2(32,26),Vector2(64,52))
   draw_style_box(door_style(selected),rect)
-  draw_string(font,d.at+Vector2(-69,5),d.title,HORIZONTAL_ALIGNMENT_CENTER,138,14,Color("edf6ff"))
+  draw_line(d.at+Vector2(0,-22),d.at+Vector2(0,22),Color('73d9e5'),2)
+  if selected:draw_string(font,d.at+Vector2(-4,5),'E',HORIZONTAL_ALIGNMENT_LEFT,-1,16,Color('f6ca68'))
  for e in entries:
   if e.id==Mission.current().get("target","") or nearest.get("id","")==e.id:
    var rise:=sin(clock*3)*3 if not Mission.reduced_motion else 0.0

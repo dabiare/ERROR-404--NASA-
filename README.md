@@ -11,7 +11,9 @@ El proyecto principal es **`mision-killa-wasi`**: campaña jugable de los tres p
 
 También puedes ejecutar **`Jugar.ps1`** desde PowerShell. El lanzador importa y abre siempre el proyecto ampliado.
 
-**Controles:** WASD/flechas para caminar, E para interactuar, Enter/Espacio para los diálogos, R para ayuda del robot, M para el mapa y Esc para pausa. Los botones funcionan con ratón o Tab y Enter.
+**Controles:** WASD/flechas para caminar, E para interactuar, Enter/Espacio para los diálogos, **T para tareas**, **J para el diario**, R para ayuda del robot, M para el croquis interactivo y Esc para pausa. Los botones funcionan con ratón o Tab y Enter.
+
+La versión actual incorpora planificación por bloques, minijuegos, rangos Cadete/Comandante, nombre del robot, cartas, recursos y escenas nocturnas. Consulta [REDISENO_DIARIO.md](mision-killa-wasi/REDISENO_DIARIO.md) para los cambios y pruebas actuales. Los ZIP anteriores contienen la versión previa.
 
 La guía completa, el guardado y las pruebas están en [mision-killa-wasi/README.md](mision-killa-wasi/README.md). Consulta también el [registro de validación](mision-killa-wasi/VALIDACION.md) y las [fuentes científicas y adaptaciones](mision-killa-wasi/FUENTES_CIENTIFICAS.md).
 

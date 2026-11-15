@@ -13,6 +13,8 @@ var tone_step: AudioStreamWAV
 var tone_confirm: AudioStreamWAV
 var tone_alarm: AudioStreamWAV
 var voice_cooldown := 0.0
+var menu_music:AudioStreamPlayer
+var spoken_voice:=''
 
 func player(stream: AudioStream, bus: String) -> AudioStreamPlayer:
  var p := AudioStreamPlayer.new()
@@ -32,6 +34,12 @@ func _ready() -> void:
    AudioServer.add_bus()
    AudioServer.set_bus_name(AudioServer.bus_count-1,name)
  indoor = player(mp3("musica_dentro_nave",true),"Music")
+ menu_music=player(mp3('musica_menu',true),'Music')
+ menu_music.volume_db=-3
+ menu_music.play()
+ if DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):
+  var voices:=DisplayServer.tts_get_voices_for_language('es')
+  if not voices.is_empty():spoken_voice=voices[0]
  outdoor = player(mp3("musica_fuera_nave",false),"Music")
  tension = player(mp3("musica_tension",true),"Music")
  voice = player(load("res://campaign/audio/Blip.wav"),"Voice")
@@ -74,8 +82,8 @@ func switch_context(next: String) -> void:
   outside_wait=randf_range(15,35)
  if fade: fade.kill()
  fade = create_tween().set_parallel(true)
- for p in [indoor,outdoor,tension]:
-  var selected: bool = (p==indoor and next=="inside") or (p==outdoor and next=="outside") or (p==tension and next=="danger")
+ for p in [indoor,outdoor,tension,menu_music]:
+  var selected: bool = (p==indoor and next=="inside") or (p==outdoor and next=="outside") or (p==tension and next=="danger") or (p==menu_music and next=='menu')
   if selected:
    if p.stream_paused: p.stream_paused = false
    if not p.playing and p!=outdoor:
@@ -85,17 +93,18 @@ func switch_context(next: String) -> void:
   else:
    fade.tween_property(p,"volume_db",-60.0,1.0)
  fade.finished.connect(func():
-  for p in [indoor,outdoor,tension]:
+  for p in [indoor,outdoor,tension,menu_music]:
    if p.volume_db < -55: p.stream_paused = true)
  if next != "danger": alarm.stop()
 
 func _process(delta: float) -> void:
  voice_cooldown = maxf(0,voice_cooldown-delta)
  if not Mission.active: switch_context("menu"); return
+ if get_tree().get_meta('landing',false):switch_context('menu');return
  var task_id: String = Mission.current().get("id","")
  var danger := not Mission.emergency.is_empty() or task_id in ["dose_check","wait_control"]
  switch_context("danger" if danger else ("outside" if Mission.room=="exterior" else "inside"))
- if not Mission.focused: return
+ if not Mission.focused:stop_speech();return
  if context=="outside" and not outdoor.playing and Mission.movable():
   outside_wait -= delta
   if outside_wait<=0: outdoor.stream_paused=false; outdoor.play()
@@ -124,12 +133,20 @@ func alarm_once() -> void:
  alarm.play()
 
 func shutdown() -> void:
+ stop_speech()
  set_process(false)
  if fade: fade.kill()
- for p in [indoor,outdoor,tension,voice,effect,alarm]:
+ for p in [indoor,outdoor,tension,voice,effect,alarm,menu_music]:
   if is_instance_valid(p):
    p.stop()
    p.stream=null
  tone_alarm=null
  tone_step=null
  tone_confirm=null
+
+func speak(text:String)->void:
+ if spoken_voice.is_empty() or Mission.settings.voice<=0:return
+ DisplayServer.tts_speak(text,spoken_voice,int(Mission.settings.voice*100),1.05,0.95,0,true)
+
+func stop_speech()->void:
+ if not spoken_voice.is_empty():DisplayServer.tts_stop()

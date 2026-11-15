@@ -23,9 +23,11 @@ El menú de esta versión muestra **CAMPAÑA DE TRES DÍAS**, **Nueva misión** 
 | Elegir botones | Tab / Shift+Tab, después Enter o Espacio; también ratón |
 | Ayuda opcional del robot, incluso en actividades | R o botón Ayuda del robot |
 | Mapa sin teletransporte | M |
+| Pizarra y registro de tareas | T |
+| Diario, cartas e insignias | J |
 | Pausa y opciones | Esc |
 
-El objetivo aparece arriba y la indicación inferior identifica la interacción cercana. Las puertas se activan con E. En interiores se ve la habitación completa; en el exterior la cámara sigue a la comandante. Higiene se accede desde el dormitorio.
+La tarea se consulta desde **Tareas (T)**; el signo **!** avisa de cambios. La indicación inferior identifica la interacción cercana. Las puertas se activan con E y sus nombres aparecen al acercarse. En interiores se ve la habitación completa; en el exterior la cámara sigue a la comandante. Higiene se accede desde el dormitorio. El croquis (M) permite consultar habitaciones y muestra tu posición real en la habitación actual; no teletransporta.
 
 Las actividades piden elegir, confirmar y comprobar. Las pistas del robot explican el concepto, señalan dónde buscar y detallan el siguiente paso. No cuestan recursos. Los errores de respuesta se pueden corregir.
 
@@ -37,27 +39,27 @@ Las actividades piden elegir, confirmar y comprobar. Las pistas del robot explic
 - **Día 3:** diagnóstico del agua, reserva o pausa del riego, cartucho compatible, ejercicio, salida científica, alerta solar, refugio y reporte.
 - **Después:** explorar los 26 sistemas, consultar sus fichas y completar la preparación inicial pendiente.
 
-Las emergencias duran 90, 60 y 180 segundos **de juego**. El reloj comienza después de explicar el incidente y se detiene durante diálogos, decisiones, actividades de panel, ayuda, pausa, cambios de habitación y pérdida de foco. Estos valores no representan plazos médicos. Si se acaba, interviene el equipo y se registra el coste: la campaña puede continuar.
+Las emergencias duran 90, 60 y 180 segundos **de juego** en Comandante; Cadete ofrece un 50 % más. El reloj comienza después de explicar el incidente, avanza durante los minijuegos y se detiene durante diálogos, ayuda, pausa, cambios de habitación y pérdida de foco. Estos valores no representan plazos médicos. Si se acaba, interviene el equipo y se registra el coste: la campaña puede continuar.
 
 ## Guardado y opciones
 
-Autoguardado al completar una tarea, consultar un sistema, realizar una preparación opcional, cambiar de sala, cerrar la ventana o volver al menú. Se conserva el paso pendiente de la emergencia y su tiempo restante. Una actividad sin confirmar se vuelve a comenzar desde su objetivo, sin duplicar recompensas.
+Autoguardado al completar una tarea, consultar un sistema, realizar una preparación opcional, cambiar de sala, cerrar la ventana o volver al menú. Se conserva el tiempo de la emergencia y el estado de la actividad: pasos, elecciones y rotaciones. No se duplican recompensas.
 
-En Windows el guardado está normalmente en `%APPDATA%\KillaWasi\campaign_v1.json`. Se escribe primero un archivo temporal y se conserva una copia `.bak` válida. Si el archivo principal no se puede cargar, el menú ofrece recuperar la copia o comenzar de nuevo. **Nueva misión** pide confirmación antes de reemplazar progreso.
+En Windows el guardado está normalmente en `%APPDATA%\KillaWasi\campaign_v2.json`. Las partidas anteriores (`campaign_v1.json`) se conservan y no se convierten automáticamente: el nuevo ciclo requiere empezar una misión nueva. Se escribe primero un archivo temporal y se conserva una copia `.bak` válida. Si el archivo principal no se puede cargar, el menú ofrece recuperar la copia o comenzar de nuevo. **Nueva misión** pide confirmación antes de reemplazar progreso.
 
-En Opciones hay volumen independiente de música, efectos y voz del robot, además de movimiento reducido. La música interior conserva su posición al cambiar de habitación. La música exterior espera 15–35 s al salir y 45–90 s entre canciones; la tensión sustituye temporalmente la música normal.
+En Opciones hay volumen independiente de música, efectos y voz del robot, además de movimiento reducido. El menú y alunizaje usan el MP3 nuevo del equipo. La música interior conserva su posición al cambiar de habitación. La música exterior espera 15–35 s al salir y 45–90 s entre canciones; la tensión sustituye temporalmente la música normal. Las instrucciones se leen con una voz en español del sistema cuando esté instalada; Blip sigue siendo un sonido adicional del robot.
 
 ## Para editar
 
 | Archivo / carpeta | Responsabilidad |
 |---|---|
-| `campaign/main.tscn`, `game.gd` | Inicio, escenas, interacción y presentación |
-| `campaign/mission.gd` | Autoridad del progreso, inventario, elecciones, emergencias y guardado |
-| `campaign/story.gd` | Secuencia y textos de la campaña |
+| `campaign/main.tscn`, `daily_game.gd` | Inicio, escenas, interacción, cenas y transiciones |
+| `campaign/daily_mission.gd` | Bloques, dependencias, recursos, ánimo, decisiones, emergencias y guardado |
+| `campaign/daily_data.gd` | Tareas, conversaciones y auditoría de palabras |
 | `campaign/catalog.gd` | 26 identificadores, fichas, fuentes y tripulación |
 | `campaign/rooms/`, `room.gd` | 12 escenas, puertas, mobiliario, navegación y NPC |
 | `campaign/actor.gd` | Movimiento, animaciones, robot, trabajo y sorpresa |
-| `campaign/ui.gd` | Diálogos, decisiones, actividades, mapa, ayuda e informe |
+| `campaign/daily_ui.gd`, `map_view.gd`, `minigame.gd` | Tareas, diario, enciclopedia, croquis y minijuegos |
 | `campaign/audio.gd` | Música persistente, efectos, alarma y voz |
 | `campaign/meteorito_lunar.gd` | Impacto lejano sin atmósfera ni daño |
 | `campaign/art/`, `audio/`, `references/` | Recursos incluidos y guion original |
@@ -72,11 +74,11 @@ Desde la carpeta superior:
 ```powershell
 $godot = 'C:\Users\Domenick\Desktop\Godot\Godot_v4.7.2-stable_win64_console.exe'
 & $godot --headless --path mision-killa-wasi --editor --import --quit
-& $godot --headless --path mision-killa-wasi -- --campaign-test
-& $godot --headless --path mision-killa-wasi --fixed-fps 60 -- --keyboard-tour
-& $godot --path mision-killa-wasi -- --presentation-test
+& $godot --headless --path mision-killa-wasi -- --daily-test
+& $godot --headless --path mision-killa-wasi --fixed-fps 60 -- --daily-tour
+& $godot --path mision-killa-wasi -- --daily-visual
 ```
 
-Las pruebas usan `test_campaign_v1.json` y no reemplazan la partida normal. Las capturas y la grabación de mezcla se guardan en `artifacts/`, excluida de Git. El registro detallado está en [VALIDACION.md](VALIDACION.md); las fuentes y adaptaciones están en [FUENTES_CIENTIFICAS.md](FUENTES_CIENTIFICAS.md).
+Las pruebas actuales usan `test_daily_v2.json` y no reemplazan la partida normal. Las capturas se guardan en `artifacts/daily/`, excluida de Git. Consulta [REDISENO_DIARIO.md](REDISENO_DIARIO.md) para las pruebas actuales; [VALIDACION.md](VALIDACION.md) conserva el registro de la campaña anterior. Las fuentes y adaptaciones están en [FUENTES_CIENTIFICAS.md](FUENTES_CIENTIFICAS.md).
 
 La meta de duración es **35–50 minutos** incluyendo lectura, decisiones y exploración. La prueba automatizada salta la lectura: su tiempo no equivale al de una partida infantil. Hace falta una sesión posterior con niños de 7–12 años para validar duración, comprensión y dificultad.

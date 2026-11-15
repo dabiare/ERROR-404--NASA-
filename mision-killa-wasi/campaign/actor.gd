@@ -101,6 +101,8 @@ func _physics_process(delta: float) -> void:
  queue_redraw()
 
 func _draw() -> void:
+ if robot and Mission.optional.get('robot_accessory',false):
+  draw_string(ThemeDB.fallback_font,Vector2(-6,-58),'★',HORIZONTAL_ALIGNMENT_LEFT,-1,18,Color('f6ca68'))
  draw_set_transform(Vector2(0,-1),0,Vector2(1,0.3))
  draw_circle(Vector2.ZERO,17 if not robot else 12,Color(0.02,0.04,0.08,0.35))
  draw_set_transform(Vector2.ZERO)

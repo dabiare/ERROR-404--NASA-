@@ -42,7 +42,7 @@ func _process(_delta: float) -> void:
  if testing:
   args.append_array(PackedStringArray([
    "--headless", "--log-file", project_path.path_join("artifacts/launcher_child.log"),
-   "--", "--campaign-test"
+   "--", "--daily-test"
   ]))
  var child := OS.create_process(OS.get_executable_path(), args)
  if child < 0:

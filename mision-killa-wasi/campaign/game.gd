@@ -18,6 +18,7 @@ var landing_dust:=false
 var generation:=0
 var conversation_counts: Dictionary={}
 var last_step:=-1
+var ui_script_path:='res://campaign/ui.gd'
 
 func _ready() -> void:
  get_tree().auto_accept_quit=false
@@ -36,7 +37,7 @@ func _ready() -> void:
  camera=Camera2D.new()
  camera.position=Vector2(640,360)
  holder.add_child(camera)
- ui=preload("res://campaign/ui.gd").new()
+ ui=load(ui_script_path).new()
  ui.game=self
  add_child(ui)
  Mission.changed.connect(on_changed)
@@ -83,7 +84,7 @@ func show_menu() -> void:
  shade.color=Color(0.025,0.055,0.11,0.62)
  shade.size=Vector2(1280,720)
  menu.add_child(shade)
- ui.label(menu,"ERROR 404  /  CAMPAÑA DE TRES DÍAS",Rect2(70,60,800,35),18,Color("70dfdf"))
+ ui.label(menu,"ERROR 404  /  CAMPAÑA DE TRES DÍAS · V2",Rect2(70,60,800,35),18,Color("70dfdf"))
  ui.label(menu,"MISIÓN\nKILLA WASI",Rect2(65,135,800,210),64)
  ui.label(menu,"Cinco especialistas. Un robot curioso.\nTus primeros tres días al mando.",Rect2(70,355,720,90),25,Color("cedcea"))
  ui.label(menu,"WASD o flechas · E interactuar · R ayuda · M mapa",Rect2(70,650,1050,35),18)
