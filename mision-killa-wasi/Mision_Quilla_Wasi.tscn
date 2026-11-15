@@ -1,0 +1,143 @@
+[gd_scene format=3 uid="uid://b0yn1g6sh8fsx"]
+
+[ext_resource type="Script" uid="uid://d0c4on3fydk0t" path="res://base_lunar.gd" id="1_bp1uk"]
+[ext_resource type="Texture2D" uid="uid://d18dm5i86s8ex" path="res://Base Lunar Killa Wasi con Paneles Solares.png" id="2_s0cl8"]
+[ext_resource type="Script" uid="uid://g0q42rma6npe" path="res://comandante.gd" id="3_kby08"]
+[ext_resource type="Texture2D" uid="uid://c51vppn488ujj" path="res://Astronauta Comandante Sonriente.png" id="4_2wxhu"]
+[ext_resource type="Texture2D" uid="uid://bm5s63ienpvx2" path="res://walk_01.png" id="5_o6u18"]
+[ext_resource type="Texture2D" uid="uid://dn8i503pfsg5g" path="res://walk_04.png" id="6_c6ub6"]
+[ext_resource type="Texture2D" uid="uid://k4220uf3stye" path="res://walk_06.png" id="7_5t7m8"]
+[ext_resource type="Script" uid="uid://comq6y05idscy" path="res://entrada_base.gd" id="8_pa24x"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tc4q0"]
+radius = 22.0
+height = 44.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bx8n8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_2wxhu")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_o6u18")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_c6ub6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_5t7m8")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5h11f"]
+size = Vector2(232, 61.25)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5iqjx"]
+bg_color = Color(0.043137256, 0.09803922, 0.2, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.20784314, 0.8509804, 1, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[node name="BaseLunar" type="Node2D" unique_id=1186690510]
+script = ExtResource("1_bp1uk")
+
+[node name="FondoLunar" type="Sprite2D" parent="." unique_id=1379237522]
+texture = ExtResource("2_s0cl8")
+centered = false
+
+[node name="Comandante" type="CharacterBody2D" parent="." unique_id=1419683007]
+position = Vector2(750, 650)
+script = ExtResource("3_kby08")
+
+[node name="ImagenComandante" type="Sprite2D" parent="Comandante" unique_id=1188436718]
+visible = false
+position = Vector2(212.00002, -119.000015)
+scale = Vector2(0.102, 0.1)
+texture = ExtResource("4_2wxhu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Comandante" unique_id=1346978465]
+position = Vector2(214, -105)
+shape = SubResource("CapsuleShape2D_tc4q0")
+
+[node name="Camera2D" type="Camera2D" parent="Comandante" unique_id=1046187375]
+limit_left = 0
+limit_top = 0
+limit_right = 2172
+limit_bottom = 724
+limit_smoothed = true
+position_smoothing_enabled = true
+
+[node name="AnimacionComandante" type="AnimatedSprite2D" parent="Comandante" unique_id=1864715501]
+position = Vector2(216.99998, -148.99998)
+scale = Vector2(0.1, 0.1)
+sprite_frames = SubResource("SpriteFrames_bx8n8")
+animation = &"walk"
+frame = 2
+frame_progress = 0.45255077
+
+[node name="LimitesTerreno" type="StaticBody2D" parent="." unique_id=1757371307]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LimitesTerreno" unique_id=476083911]
+build_mode = 1
+polygon = PackedVector2Array(39, 520, 42, 615, 68, 718, 322, 715, 273, 658, 229, 641, 198, 643, 155, 573, 177, 521, 181, 479, 375, 440, 454, 481, 360, 558, 389, 582, 641, 562, 615, 515, 541, 476, 598, 456, 751, 439, 814, 424, 856, 419, 910, 481, 955, 437, 1092, 436, 1118, 430, 1159, 483, 1306, 446, 1411, 426, 1587, 362, 1675, 305, 1712, 299, 1930, 298, 1777, 526, 1822, 570, 1741, 723, 1868, 628, 1907, 630, 1953, 607, 1986, 622, 2132, 426, 2053, 288, 1936, 244, 1665, 205, 1602, 222, 1535, 156, 1496, 216, 1450, 184, 1360, 194, 1289, 254, 1213, 226, 1187, 106, 1135, 150, 1089, 136, 1023, 160, 958, 154, 945, 196, 869, 229, 788, 228, 767, 194, 702, 186, 637, 237, 545, 269, 462, 238, 35, 325)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="LimitesTerreno" unique_id=1001573145]
+build_mode = 1
+polygon = PackedVector2Array(396, 679, 427, 654, 459, 645, 489, 649, 513, 654, 524, 668, 528, 684, 502, 695, 475, 701, 449, 702, 429, 703, 411, 696)
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="LimitesTerreno" unique_id=1666827159]
+build_mode = 1
+polygon = PackedVector2Array(665, 652, 665, 632, 669, 626, 677, 619, 687, 614, 698, 609, 714, 602, 725, 597, 739, 591, 756, 590, 777, 587, 801, 587, 837, 591, 856, 597, 881, 603, 886, 613, 902, 620, 917, 629, 917, 639, 912, 652, 907, 658, 893, 664, 861, 674, 841, 676, 802, 682, 780, 685, 762, 685, 733, 684, 717, 682, 699, 672, 689, 667, 674, 658)
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="LimitesTerreno" unique_id=128947074]
+build_mode = 1
+polygon = PackedVector2Array(1147, 552, 1147, 562, 1155, 568, 1167, 575, 1191, 578, 1216, 580, 1250, 578, 1267, 577, 1285, 571, 1301, 563, 1300, 554, 1291, 549, 1281, 541, 1264, 532, 1236, 529, 1218, 528, 1200, 528, 1185, 531, 1168, 537, 1152, 546)
+
+[node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="LimitesTerreno" unique_id=77584019]
+build_mode = 1
+polygon = PackedVector2Array(1641, 609, 1641, 596, 1661, 587, 1686, 581, 1715, 576, 1753, 579, 1770, 595, 1775, 612, 1763, 620, 1740, 626, 1716, 630, 1695, 630, 1671, 628, 1651, 619)
+
+[node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="LimitesTerreno" unique_id=464424923]
+build_mode = 1
+polygon = PackedVector2Array(1103, 718, 1124, 694, 1160, 676, 1189, 662, 1216, 649, 1237, 631, 1277, 628, 1305, 621, 1327, 613, 1353, 625, 1369, 636, 1387, 642, 1396, 650, 1411, 655, 1414, 676, 1408, 686, 1401, 692, 1388, 695, 1366, 703, 1348, 711, 1338, 716)
+
+[node name="EntradaBase" type="Area2D" parent="." unique_id=2126797469]
+script = ExtResource("8_pa24x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntradaBase" unique_id=1110835039]
+position = Vector2(1045, 457.375)
+shape = SubResource("RectangleShape2D_5h11f")
+
+[node name="Panel" type="Panel" parent="." unique_id=991407559]
+offset_left = 854.0
+offset_top = 312.0
+offset_right = 1267.0
+offset_bottom = 350.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5iqjx")
+
+[node name="MensajeEntrada" type="Label" parent="." unique_id=1080472407]
+z_index = 10
+offset_left = 862.0
+offset_top = 312.0
+offset_right = 1258.0
+offset_bottom = 346.0
+theme_override_font_sizes/font_size = 24
+text = "Presiona E para entrar a Killa Wasi"
+
+[connection signal="body_entered" from="EntradaBase" to="." method="_on_entrada_base_body_entered"]
+[connection signal="body_exited" from="EntradaBase" to="." method="_on_entrada_base_body_exited"]

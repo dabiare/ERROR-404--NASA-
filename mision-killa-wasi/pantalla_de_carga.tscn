@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://djl7fxlxsx46l"]
+
+[ext_resource type="Texture2D" uid="uid://dvtqibpdl8pxt" path="res://Pantalla de carga.png" id="1_35hou"]
+[ext_resource type="Script" uid="uid://b5ll3if2sj7ga" path="res://pantalla_de_carga.gd" id="1_pjvae"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7itdt"]
+bg_color = Color(0.043137256, 0.09803922, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_com8s"]
+bg_color = Color(0, 0.8509804, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="PantallaDeCarga" type="Control" unique_id=1940561628]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pjvae")
+
+[node name="FondoDeCarga" type="TextureRect" parent="." unique_id=1174763448]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_35hou")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BarraDeCarga" type="ProgressBar" parent="." unique_id=932881721]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 531.0
+offset_right = 879.0
+offset_bottom = 572.0
+theme_override_colors/font_color = Color(1, 0.81960785, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_styles/background = SubResource("StyleBoxFlat_7itdt")
+theme_override_styles/fill = SubResource("StyleBoxFlat_com8s")
+value = 65.0
