@@ -15,6 +15,19 @@ var tone_alarm: AudioStreamWAV
 var voice_cooldown := 0.0
 var menu_music:AudioStreamPlayer
 var spoken_voice:=''
+var english_voices:PackedStringArray=[]
+var narration:AudioStreamPlayer
+var narration_pitch:AudioEffectPitchShift
+var missing_voice_lines:Array[String]=[]
+const VOICE_PROFILES={
+ 'commander':{'voice':0,'pitch':1.02,'rate':0.98},
+ 'engineer':{'voice':1,'pitch':0.87,'rate':1.07},
+ 'botanist':{'voice':2,'pitch':1.18,'rate':1.08},
+ 'doctor':{'voice':0,'pitch':0.91,'rate':0.86},
+ 'geologist':{'voice':1,'pitch':1.08,'rate':1.13},
+ 'robot':{'voice':2,'pitch':1.48,'rate':1.16},
+ 'control':{'voice':0,'pitch':0.79,'rate':0.93}
+}
 
 func player(stream: AudioStream, bus: String) -> AudioStreamPlayer:
  var p := AudioStreamPlayer.new()
@@ -33,13 +46,19 @@ func _ready() -> void:
   if AudioServer.get_bus_index(name)<0:
    AudioServer.add_bus()
    AudioServer.set_bus_name(AudioServer.bus_count-1,name)
+ if AudioServer.get_bus_index('Narration')<0:
+  AudioServer.add_bus();AudioServer.set_bus_name(AudioServer.bus_count-1,'Narration')
+ AudioServer.set_bus_send(AudioServer.get_bus_index('Narration'),'Voice')
+ narration_pitch=AudioEffectPitchShift.new()
+ AudioServer.add_bus_effect(AudioServer.get_bus_index('Narration'),narration_pitch)
+ narration=player(null,'Narration')
  indoor = player(mp3("musica_dentro_nave",true),"Music")
  menu_music=player(mp3('musica_menu',true),'Music')
  menu_music.volume_db=-3
  menu_music.play()
  if DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):
-  var voices:=DisplayServer.tts_get_voices_for_language('es')
-  if not voices.is_empty():spoken_voice=voices[0]
+  english_voices=DisplayServer.tts_get_voices_for_language('en')
+  if not english_voices.is_empty():spoken_voice=english_voices[0]
  outdoor = player(mp3("musica_fuera_nave",false),"Music")
  tension = player(mp3("musica_tension",true),"Music")
  voice = player(load("res://campaign/audio/Blip.wav"),"Voice")
@@ -51,6 +70,7 @@ func _ready() -> void:
  outdoor.finished.connect(func(): outside_wait = randf_range(45,90))
  Mission.emergency_started.connect(func(_kind): alarm_once(); alarm_wait = 15.0)
  set_levels()
+ refresh_voices()
 
 func tone(seconds: float, hz: float, gain: float, siren := false) -> AudioStreamWAV:
  var data := PackedByteArray()
@@ -136,7 +156,7 @@ func shutdown() -> void:
  stop_speech()
  set_process(false)
  if fade: fade.kill()
- for p in [indoor,outdoor,tension,voice,effect,alarm,menu_music]:
+ for p in [indoor,outdoor,tension,voice,effect,alarm,menu_music,narration]:
   if is_instance_valid(p):
    p.stop()
    p.stream=null
@@ -144,9 +164,32 @@ func shutdown() -> void:
  tone_step=null
  tone_confirm=null
 
-func speak(text:String)->void:
- if spoken_voice.is_empty() or Mission.settings.voice<=0:return
- DisplayServer.tts_speak(text,spoken_voice,int(Mission.settings.voice*100),1.05,0.95,0,true)
+func speak(text:String,speaker:='robot')->void:
+ if spoken_voice.is_empty():refresh_voices()
+ if Mission.settings.voice<=0:return
+ var profile:Dictionary=VOICE_PROFILES.get(speaker,VOICE_PROFILES.robot)
+ var clip:String=voice_clip_path(text)
+ if ResourceLoader.exists(clip):
+  stop_speech()
+  narration.stream=load(clip)
+  narration.pitch_scale=profile.rate
+  narration_pitch.pitch_scale=profile.pitch/profile.rate
+  narration.play()
+  return
+ if english_voices.is_empty():
+  if not text in missing_voice_lines:missing_voice_lines.append(text)
+  return
+ var voice_id:String=english_voices[int(profile.voice)%english_voices.size()]
+ DisplayServer.tts_speak(text,voice_id,int(Mission.settings.voice*100),profile.pitch,profile.rate,0,true)
+
+func refresh_voices()->void:
+ if DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):english_voices=DisplayServer.tts_get_voices_for_language('en')
+ if not english_voices.is_empty():spoken_voice=english_voices[0]
+ elif ResourceLoader.exists(voice_clip_path('We will look after our crew and explore together.')):spoken_voice='Bundled English audio'
+
+func voice_clip_path(text:String)->String:
+ return 'res://campaign/audio/voices_en/'+text.sha256_text().substr(0,24)+'.wav'
 
 func stop_speech()->void:
- if not spoken_voice.is_empty():DisplayServer.tts_stop()
+ if not english_voices.is_empty():DisplayServer.tts_stop()
+ if is_instance_valid(narration):narration.stop()

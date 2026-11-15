@@ -84,19 +84,19 @@ func show_menu() -> void:
  shade.color=Color(0.025,0.055,0.11,0.62)
  shade.size=Vector2(1280,720)
  menu.add_child(shade)
- ui.label(menu,"ERROR 404  /  CAMPAÑA DE TRES DÍAS · V2",Rect2(70,60,800,35),18,Color("70dfdf"))
- ui.label(menu,"MISIÓN\nKILLA WASI",Rect2(65,135,800,210),64)
- ui.label(menu,"Cinco especialistas. Un robot curioso.\nTus primeros tres días al mando.",Rect2(70,355,720,90),25,Color("cedcea"))
- ui.label(menu,"WASD o flechas · E interactuar · R ayuda · M mapa",Rect2(70,650,1050,35),18)
- ui.button(menu,"Nueva misión",Rect2(870,220,310,60),new_mission_confirmation).grab_focus()
- var cont: Button=ui.button(menu,"Continuar",Rect2(870,295,310,60),continue_game)
+ ui.label(menu,"ERROR 404  /  THREE-DAY CAMPAIGN",Rect2(70,60,800,35),18,Color("70dfdf"))
+ ui.label(menu,"MISSION\nKILLA WASI",Rect2(65,135,800,210),64)
+ ui.label(menu,"Five specialists. One curious robot.\nYour first three days in charge.",Rect2(70,355,720,90),25,Color("cedcea"))
+ ui.label(menu,"WASD or arrows · E interact · R help · M map",Rect2(70,650,1050,35),18)
+ ui.button(menu,"New mission",Rect2(870,220,310,60),new_mission_confirmation).grab_focus()
+ var cont: Button=ui.button(menu,"Continue",Rect2(870,295,310,60),continue_game)
  cont.disabled=not FileAccess.file_exists(Mission.save_path) and not FileAccess.file_exists(Mission.save_path+".bak")
- ui.button(menu,"Opciones",Rect2(870,370,310,60),ui.show_pause)
- ui.button(menu,"Salir",Rect2(870,445,310,60),func(): get_tree().quit())
+ ui.button(menu,"Options",Rect2(870,370,310,60),ui.show_pause)
+ ui.button(menu,"Quit",Rect2(870,445,310,60),func(): get_tree().quit())
 
 func new_mission_confirmation() -> void:
  if not FileAccess.file_exists(Mission.save_path) and not FileAccess.file_exists(Mission.save_path+".bak"): start_new(); return
- var p: Control=ui.push("NUEVA MISIÓN",Rect2(240,190,800,340))
+ var p: Control=ui.push("NEW MISSION",Rect2(240,190,800,340))
  ui.label(p,"La nueva partida reemplazará el progreso guardado. ¿Quieres comenzar desde el alunizaje?",Rect2(35,100,730,110),23)
  ui.button(p,"Comenzar de nuevo",Rect2(35,245,350,55),func(): ui.pop(); start_new()).grab_focus()
  ui.button(p,"Conservar mi partida",Rect2(410,245,350,55),ui.pop)
@@ -124,9 +124,9 @@ func start_new() -> void:
  landing_active=true
  menu=Control.new()
  ui.root.add_child(menu)
- ui.label(menu,"LLEGADA A KILLA WASI",Rect2(55,140,800,60),36)
- ui.label(menu,"Día 1 / Una misión de 30 días comienza con un paso.",Rect2(55,205,1050,50),22)
- ui.button(menu,"Omitir alunizaje",Rect2(960,595,260,55),finish_landing).grab_focus()
+ ui.label(menu,"ARRIVING AT KILLA WASI",Rect2(55,140,800,60),36)
+ ui.label(menu,"Day 1 / A 30-day mission starts with one step.",Rect2(55,205,1050,50),22)
+ ui.button(menu,"Skip landing",Rect2(960,595,260,55),finish_landing).grab_focus()
 
 func finish_landing() -> void:
  if not landing_active: return
@@ -146,19 +146,19 @@ func continue_game() -> void:
   await change_room(Mission.room,false,true)
   if Mission.optional.get("emergency_brief_pending",false) and not Mission.emergency.is_empty(): emergency_brief()
   elif not Mission.optional.get("arrival_seen",false) and Mission.room=="exterior": arrival_context()
-  ui.toast("Partida recuperada · El objetivo conserva tu siguiente paso.")
+  ui.toast("Save restored · Check Tasks for your next step.")
  else:
-  var p: Control=ui.push("RECUPERAR PARTIDA")
-  ui.label(p,"El guardado principal no se pudo leer. Puedes intentar recuperar la copia anterior o comenzar una misión nueva.",Rect2(35,100,900,150),23)
-  ui.button(p,"Recuperar copia anterior",Rect2(35,300,900,55),func():
+  var p: Control=ui.push("RECOVER SAVE")
+  ui.label(p,"We could not read your save. Try the backup or start a new mission.",Rect2(35,100,900,150),23)
+  ui.button(p,"Recover backup",Rect2(35,300,900,55),func():
    if Mission.load_game(true):
     ui.clear()
     await change_room(Mission.room,false,true)
     if Mission.optional.get("emergency_brief_pending",false) and not Mission.emergency.is_empty(): emergency_brief()
     elif not Mission.optional.get("arrival_seen",false) and Mission.room=="exterior": arrival_context()
-   else: ui.toast("No se encontró una copia válida. Puedes empezar una nueva misión.")).grab_focus()
-  ui.button(p,"Nueva misión",Rect2(35,375,900,55),func(): ui.clear(); start_new())
-  ui.button(p,"Volver",Rect2(35,440,900,45),ui.pop)
+   else: ui.toast("No working backup found. You can start a new mission.")).grab_focus()
+  ui.button(p,"New mission",Rect2(35,375,900,55),func(): ui.clear(); start_new())
+  ui.button(p,"Back",Rect2(35,440,900,45),ui.pop)
 
 func change_room(next: String, through_door:=true, loading:=false) -> void:
  if not Catalog.ROOMS.has(next): return
@@ -181,7 +181,7 @@ func change_room(next: String, through_door:=true, loading:=false) -> void:
  if next=="exterior":
   world.meteor.finished.connect(func():
    if Mission.active and Mission.room=="exterior":
-    ui.show_lines([["geologist","¡Un destello lejano! Una roca acaba de chocar con el suelo: aquí no hay una atmósfera densa que la frene como en la Tierra."],["geologist","Seguiremos nuestra ruta segura. Este impacto y las alertas de partículas solares son fenómenos distintos."]]))
+    ui.show_lines([["geologist","A distant flash! A rock hit the surface. The Moon has no thick atmosphere to slow it."],["geologist","We will stay on our safe route. Rock impacts and solar particle alerts are different."]]))
  hero.show(); robot.show()
  hero.velocity=Vector2.ZERO
  robot.route=PackedVector2Array()
@@ -202,7 +202,7 @@ func change_room(next: String, through_door:=true, loading:=false) -> void:
  ui.fade.color.a=0
  if next=="airlock" and not Mission.optional.get("entered",false):
   Mission.optional.entered=true
-  ui.show_lines([["commander","Presión comprobada. El equipo me espera en la sala común para presentarse."]],func():
+  ui.show_lines([["commander","Pressure checked. The crew is waiting to meet me in the common room."]],func():
    await change_room("shelter",false)
    hero.position=Vector2(640,435)
    robot.position=Vector2(600,450)
@@ -248,7 +248,7 @@ func perform_task(answer: int) -> void:
   "prepare":["Leer etiqueta","Comparar con el registro","Guardar el resultado"],
   "air_clear":["Modo seguro","Retirar obstrucción","Revisar el filtro"],
   "air_on":["Activar ventilador","Observar flujo","Comparar CO₂"],
-  "rover_patch":["Seleccionar lámina","Ajustar abrazaderas","Comprobar distancia a la rueda"],
+  "rover_patch":["Seleccionar lámina","3 · Secure and check the clamps","Comprobar distancia a la rueda"],
   "rover_test":["Comprobar cobertura","Comprobar sujeción","Verificar que no roce"],
   "sample2":["Anotar ubicación","Tomar registro","Etiquetar muestra"],
   "dust_return":["Aislar zona sucia","Retirar y contener polvo","Comprobar limpieza"],

@@ -20,10 +20,10 @@ func _ready()->void:
   var b:Button=ui.button(self,marker+NAMES[id],rect,func():selected=room_id;queue_redraw())
   b.add_theme_font_size_override('font_size',14)
  selected_label=ui.label(self,'',Rect2(655,0,425,60),19)
- ui.label(self,'● Tú   ★ Destino   Selecciona una sala para consultar su croquis.',Rect2(650,305,430,50),15)
+ ui.label(self,"● You   ★ Destination   Select a room to preview its layout.",Rect2(650,305,430,50),15)
 
 func _process(_delta:float)->void:
- selected_label.text=NAMES[selected]+('\nEstás aquí' if selected==Mission.room else '\nConsulta · Sin teletransporte')
+ selected_label.text=NAMES[selected]+("\nYou are here" if selected==Mission.room else "\nPreview · No teleporting")
  queue_redraw()
 
 func local_point(at:Vector2)->Vector2:
@@ -67,4 +67,4 @@ func _draw()->void:
   var slots:Array=[Vector2(230,305),Vector2(500,305),Vector2(800,305),Vector2(1060,305),Vector2(230,515),Vector2(500,515),Vector2(1000,515)]
   if list.size()<=4:slots=[Vector2(280,305),Vector2(980,305),Vector2(280,520),Vector2(980,520)]
   for i in list.size():draw_rect(Rect2(local_point(slots[i])-Vector2(16,10),Vector2(32,20)),Color('557087'))
-  draw_string(ThemeDB.fallback_font,Vector2(680,275),'Tu posición aparece en la sala actual.',HORIZONTAL_ALIGNMENT_LEFT,-1,16,Color('bad0e3'))
+  draw_string(ThemeDB.fallback_font,Vector2(680,275),"Your position appears in your current room.",HORIZONTAL_ALIGNMENT_LEFT,-1,16,Color('bad0e3'))

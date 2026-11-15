@@ -19,21 +19,21 @@ func _ready() -> void:
  box.add_theme_constant_override("separation", 24)
  add_child(box)
  var title := Label.new()
- title.text = "MISIÓN KILLA WASI · CAMPAÑA DE TRES DÍAS"
+ title.text = "MISSION KILLA WASI · THREE-DAY CAMPAIGN"
  title.add_theme_font_size_override("font_size", 30)
  box.add_child(title)
  status = Label.new()
- status.text = "Preparando la campaña ampliada…\nLa primera importación puede tardar unos momentos."
+ status.text = "Preparing your lunar adventure…\nThe first import may take a few moments."
  status.add_theme_font_size_override("font_size", 22)
  box.add_child(status)
  project_path = ProjectSettings.globalize_path("res://mision-killa-wasi")
  if not FileAccess.file_exists(project_path.path_join("project.godot")):
-  fail("No se encontró mision-killa-wasi/project.godot junto al acceso principal.")
+  fail("Could not find mision-killa-wasi/project.godot beside this launcher.")
   return
  importer_pid = OS.create_process(OS.get_executable_path(), PackedStringArray([
   "--headless", "--editor", "--path", project_path, "--import", "--quit"
  ]))
- if importer_pid < 0: fail("No se pudo iniciar Godot para importar la campaña.")
+ if importer_pid < 0: fail("Could not start Godot to import the campaign.")
 
 func _process(_delta: float) -> void:
  if importer_pid < 0 or OS.is_process_running(importer_pid): return
@@ -46,7 +46,7 @@ func _process(_delta: float) -> void:
   ]))
  var child := OS.create_process(OS.get_executable_path(), args)
  if child < 0:
-  fail("No se pudo abrir la campaña. Importa directamente mision-killa-wasi/project.godot.")
+  fail("Could not start the campaign. Import mision-killa-wasi/project.godot directly.")
   return
  print("CAMPAIGN_LAUNCHER: opened ", project_path, "; pid=", child)
  get_tree().quit()

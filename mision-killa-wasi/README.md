@@ -1,75 +1,86 @@
-# Misión Killa Wasi — tres primeros días
+# Mission Killa Wasi — English edition
 
-Proyecto principal en Godot **4.7.2**, GDScript y renderizador Compatibility. Equipo ERROR 404. La campaña termina con el informe del día 3; los 30 días siguen siendo el contexto de la misión.
+An educational three-day lunar campaign for children, built with **Godot 4.7.2**, GDScript, and the Compatibility renderer. Team ERROR 404. The planned mission lasts thirty days; this playable campaign ends after day three.
 
-## Abrir y jugar
+## Open and play
 
-1. Abre Godot 4.7.2 y pulsa **Importar**.
-2. Selecciona **este** `project.godot`, dentro de `mision-killa-wasi`.
-3. Abre el proyecto y pulsa **F5**.
-4. Elige **Nueva misión** o **Continuar**.
+1. Import **this folder's `project.godot`** in Godot 4.7.2.
+2. Open the project and press **F5**.
+3. Choose **New mission**, then read the two adventure-mode cards.
 
-El `Jugar.ps1` de la carpeta superior abre este proyecto. La primera importación puede tardar porque incluye los recursos de arte y los fotogramas proporcionados por el equipo. No necesita Internet, plugins, .NET ni plantillas de exportación.
+The parent folder's `Jugar.ps1` and root Godot project also launch this campaign. Close and reopen an already-open editor if it still uses an earlier configuration. The first import may take a few minutes because all artwork and English dialogue audio are included.
 
-El menú de esta versión muestra **CAMPAÑA DE TRES DÍAS**, **Nueva misión** y **Continuar**. Si tenías abierto el proyecto de la carpeta superior, ciérralo y vuelve a abrirlo: su F5 ahora prepara y lanza esta campaña. Para editarla directamente, importa este archivo `project.godot`.
+## Controls
 
-## Controles
-
-| Acción | Control |
+| Action | Controls |
 |---|---|
-| Caminar | WASD o flechas |
-| Interactuar con el elemento o puerta más cercano | E |
-| Avanzar diálogo / mostrar toda la frase | Enter, Espacio o clic en Continuar |
-| Elegir botones | Tab / Shift+Tab, después Enter o Espacio; también ratón |
-| Ayuda opcional del robot, incluso en actividades | R o botón Ayuda del robot |
-| Mapa sin teletransporte | M |
-| Pizarra y registro de tareas | T |
-| Diario, cartas e insignias | J |
-| Pausa y opciones | Esc |
+| Move the commander | WASD or arrow keys |
+| Interact with nearby equipment or a door | E |
+| Continue or reveal dialogue | Enter, Space, or Continue button |
+| Task board and task record | T |
+| Journal, cards, and badges | J |
+| Interactive map | M |
+| Optional robot help | R |
+| Pause and options | Esc |
+| Navigate ordinary buttons | Tab / Shift+Tab, then Enter; or mouse |
 
-La tarea se consulta desde **Tareas (T)**; el signo **!** avisa de cambios. La indicación inferior identifica la interacción cercana. Las puertas se activan con E y sus nombres aparecen al acercarse. En interiores se ve la habitación completa; en el exterior la cámara sigue a la comandante. Higiene se accede desde el dormitorio. El croquis (M) permite consultar habitaciones y muestra tu posición real en la habitación actual; no teletransporta.
+The task button shows **!** when there is news. It replaces the old objective text at the top center. Door names appear when approached. The map previews connected rooms and shows your actual position in your current room; it does not teleport you.
 
-Las actividades piden elegir, confirmar y comprobar. Las pistas del robot explican el concepto, señalan dónde buscar y detallan el siguiente paso. No cuestan recursos. Los errores de respuesta se pueden corregir.
+## Understand, act, and check
 
-## Campaña
+Before every activity, a crew member briefly explains why it matters, then explains what to do. Activity cards define objects and actions; stage instructions, feedback, and progress messages explain what changed. Read [ENGLISH_EDUCATION.md](ENGLISH_EDUCATION.md) for the content revision, including the distinction between dust filters, carbon-dioxide scrubbers, and water cartridges.
 
-- **Llegada:** alunizaje omisible que conserva el contexto, entrada y reunión presencial con los cuatro especialistas.
-- **Día 1:** adaptación y revisión médica, comida, prioridad entre repuestos y laboratorio, ventilación del dormitorio.
-- **Día 2:** traje, radio y esclusa; geólogo, rover, reparación del guardabarros, impacto lejano, muestras, limpieza de polvo y sellos.
-- **Día 3:** diagnóstico del agua, reserva o pausa del riego, cartucho compatible, ejercicio, salida científica, alerta solar, refugio y reporte.
-- **Después:** explorar los 26 sistemas, consultar sus fichas y completar la preparación inicial pendiente.
+For example, storage cards represent box and shelf labels. Match the **AD-42 spare dust-filter box** with the **AD-42 shelf tag**, then choose **Store filter**. Matching the two labels does not grant a spare until you confirm storage.
 
-Las emergencias duran 90, 60 y 180 segundos **de juego** en Comandante; Cadete ofrece un 50 % más. El reloj comienza después de explicar el incidente, avanza durante los minijuegos y se detiene durante diálogos, ayuda, pausa, cambios de habitación y pérdida de foco. Estos valores no representan plazos médicos. Si se acaba, interviene el equipo y se registra el coste: la campaña puede continuar.
+Most activities use arrows and Enter or mouse selection. Calibration uses left/right to adjust and Enter to check. Vacuuming uses a selected section plus holding E, Space, or the mouse button. Rhythm exercise accepts alternating left/right or untimed practice using down and Enter; both earn the same card. Every activity supports free, optional robot help.
 
-## Guardado y opciones
+## Adventure modes and daily planning
 
-Autoguardado al completar una tarea, consultar un sistema, realizar una preparación opcional, cambiar de sala, cerrar la ventana o volver al menú. Se conserva el tiempo de la emergencia y el estado de la actividad: pasos, elecciones y rotaciones. No se duplican recompensas.
+**Cadet** is a learning explorer: extra emergency time and gentle offers of hints. **Commander** is a quicker challenge with standard emergency timers. Both let the player lead the same crew, practice, pause, and ask for help. The story and rewards are the same.
 
-En Windows el guardado está normalmente en `%APPDATA%\KillaWasi\campaign_v2.json`. Las partidas anteriores (`campaign_v1.json`) se conservan y no se convierten automáticamente: el nuevo ciclo requiere empezar una misión nueva. Se escribe primero un archivo temporal y se conserva una copia `.bak` válida. Si el archivo principal no se puede cargar, el menú ofrece recuperar la copia o comenzar de nuevo. **Nueva misión** pide confirmación antes de reemplazar progreso.
+The three days have **3, 5, and 5 time blocks**. Choose the order among available tasks. Dependencies keep preparations ahead of outings, and essential tasks remain achievable. Emergencies do not consume blocks. Optional tasks, samples, crew conversations, cards, badges, and visual improvements reward exploration.
 
-En Opciones hay volumen independiente de música, efectos y voz del robot, además de movimiento reducido. El menú y alunizaje usan el MP3 nuevo del equipo. La música interior conserva su posición al cambiar de habitación. La música exterior espera 15–35 s al salir y 45–90 s entre canciones; la tensión sustituye temporalmente la música normal. Las instrucciones se leen con una voz en español del sistema cuando esté instalada; Blip sigue siendo un sonido adicional del robot.
+- **Day 1:** arrival, crew introductions, naming the robot, medical readings, meal planning, storage or laboratory preparation, and ventilation.
+- **Day 2:** suit preparation, field science, a distant impact, rover dust-guard repair, cleaning, and an optional crew or science activity.
+- **Day 3:** water-loop repair, exercise, another outing, solar-alert return, crew shelter, and a final report.
+- Each night brings dinner and another clue about the robot's mysterious signal. After day three, the base remains available to explore.
 
-## Para editar
+Standard game timers are **90, 60, and 180 seconds**; Cadet multiplies them by 1.5. Timers run during active minigames and stop during briefings, help, pause, room transitions, and focus loss. They are game challenges, not real medical limits. If time runs out, teammates help and the campaign continues with a visible resource cost.
 
-| Archivo / carpeta | Responsabilidad |
+## Sound and voices
+
+The supplied menu track loops during the menu and landing. Indoor music continues between rooms; outdoor music uses intervals; tension music replaces normal music during emergencies.
+
+English dialogue clips are bundled in `campaign/audio/voices_en/`. They play locally without downloading voices. Characters have distinct pitch and pacing profiles; these are not recordings by seven separate actors. Use **Options → Preview character voices** to hear them individually. Voice volume controls narration and the additional robot Blip sound. English system speech is a fallback for a new line when available.
+
+## Saves
+
+The normal save is `user://campaign_v2.json`, usually `%APPDATA%\KillaWasi\campaign_v2.json` on Windows. Temporary writes and a valid `.bak` backup protect the preceding save. The campaign saves tasks, blocks, resources, mood, decisions, cards, robot name, mode, character state, position, emergency time, and activity progress.
+
+After continuing, interact with the task equipment to resume its saved activity. Older version-two saves accept Spanish mode names and display English names after loading. Player-chosen robot names are preserved. Version-one linear-campaign saves are preserved separately and are not automatically converted. New mission asks before replacing current progress.
+
+Previously delivered ZIPs are snapshots of older versions and do not automatically receive local changes.
+
+## Code and resources
+
+| Files | Purpose |
 |---|---|
-| `campaign/main.tscn`, `daily_game.gd` | Inicio, escenas, interacción, cenas y transiciones |
-| `campaign/daily_mission.gd` | Bloques, dependencias, recursos, ánimo, decisiones, emergencias y guardado |
-| `campaign/daily_data.gd` | Tareas, conversaciones y auditoría de palabras |
-| `campaign/catalog.gd` | 26 identificadores, fichas, fuentes y tripulación |
-| `campaign/rooms/`, `room.gd` | 12 escenas, puertas, mobiliario, navegación y NPC |
-| `campaign/actor.gd` | Movimiento, animaciones, robot, trabajo y sorpresa |
-| `campaign/daily_ui.gd`, `map_view.gd`, `minigame.gd` | Tareas, diario, enciclopedia, croquis y minijuegos |
-| `campaign/audio.gd` | Música persistente, efectos, alarma y voz |
-| `campaign/meteorito_lunar.gd` | Impacto lejano sin atmósfera ni daño |
-| `campaign/art/`, `audio/`, `references/` | Recursos incluidos y guion original |
-| `campaign/tests/` | Pruebas de campaña, teclado, presentación y audio |
+| `campaign/daily_data.gd` | Tasks, reasons, instructions, dialogue, dependencies, and text audit |
+| `campaign/daily_mission.gd` | Campaign state, budgets, resources, decisions, rewards, emergencies, and saves |
+| `campaign/daily_game.gd` | Story presentation, interactions, modes, nights, and day transitions |
+| `campaign/daily_ui.gd` | Tasks, journal, encyclopedia, briefings, and voice preview |
+| `campaign/minigame.gd` | Activities, controls, stage feedback, pause, and hints |
+| `campaign/map_view.gd` | Room previews and actual player position |
+| `campaign/catalog.gd`, `items_en.json` | English names, explanations, and source links for 26 systems and extra components |
+| `campaign/room.gd`, `actor.gd` | Room construction, original terrain collisions, navigation, movement, NPC work, and reactions |
+| `campaign/audio.gd` | Music, effects, bundled narration, and character voice profiles |
+| `campaign/audio/voices_en/lines.json` | Source text for included English audio clips |
 
-Los archivos anteriores (`base_lunar.tscn`, `comandante.gd`, etc.) se conservan. La campaña reutiliza el fondo y todos los polígonos de colisión del exterior, los tres fotogramas de caminata a 8 fps y la velocidad base de 200 px/s. Se centra el cuerpo físico bajo la comandante; en el exterior se añade aceleración y salto visual sin alterar el plano de colisiones.
+Original artwork, controller scenes, and earlier linear scripts remain available for reference. The campaign keeps the team's three walk frames at 8 fps, 200 px/s base speed, and exterior collision polygons. English signs are native overlays; original bitmaps remain intact.
 
-## Verificación
+## Verification
 
-Desde la carpeta superior:
+From the repository root:
 
 ```powershell
 $godot = 'C:\Users\Domenick\Desktop\Godot\Godot_v4.7.2-stable_win64_console.exe'
@@ -79,6 +90,6 @@ $godot = 'C:\Users\Domenick\Desktop\Godot\Godot_v4.7.2-stable_win64_console.exe'
 & $godot --path mision-killa-wasi -- --daily-visual
 ```
 
-Las pruebas actuales usan `test_daily_v2.json` y no reemplazan la partida normal. Las capturas se guardan en `artifacts/daily/`, excluida de Git. Consulta [REDISENO_DIARIO.md](REDISENO_DIARIO.md) para las pruebas actuales; [VALIDACION.md](VALIDACION.md) conserva el registro de la campaña anterior. Las fuentes y adaptaciones están en [FUENTES_CIENTIFICAS.md](FUENTES_CIENTIFICAS.md).
+Tests use separate test-save files, not the normal campaign save. Graphics are captured in `artifacts/daily/`, excluded from Git. State tests check purpose-before-action, text limits, voice coverage, storage confirmation, compatibility, budgets, decisions, rescues, and saved activity progress. The keyboard tour completes both routes and checks for missing spoken lines. Visual checks cover 1280×720 and 1920×1080, readable mode cards, English screens, and actual playback with distinct pitch profiles.
 
-La meta de duración es **35–50 minutos** incluyendo lectura, decisiones y exploración. La prueba automatizada salta la lectura: su tiempo no equivale al de una partida infantil. Hace falta una sesión posterior con niños de 7–12 años para validar duración, comprensión y dificultad.
+The duration and difficulty targets remain subject to real playtests with children. Automated completion and content checks do not prove enjoyment, comprehension, or a 35–50-minute play time. Earlier validation records are preserved in `VALIDACION.md` and `REDISENO_DIARIO.md`; current English behavior is described in `ENGLISH_EDUCATION.md`.

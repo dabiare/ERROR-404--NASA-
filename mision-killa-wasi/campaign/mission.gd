@@ -192,7 +192,7 @@ func save_game() -> bool:
  if not active: return false
  var file := FileAccess.open(save_path+".tmp",FileAccess.WRITE)
  if file == null:
-  save_error = "No se pudo guardar. Revisa el espacio disponible."
+  save_error = "Could not save. Check available storage space."
   return false
  file.store_string(JSON.stringify(snapshot(),"\t"))
  file.flush()
@@ -201,10 +201,10 @@ func save_game() -> bool:
   var previous:=JSON.new()
   if previous.parse(FileAccess.get_file_as_string(save_path))==OK and valid_save(previous.data):
    if DirAccess.copy_absolute(save_path,save_path+".bak")!=OK:
-    save_error="No se pudo crear la copia de respaldo; se conserva el guardado anterior."
+    save_error="Could not create a backup. Your previous save is preserved."
     return false
  var error := DirAccess.rename_absolute(save_path+".tmp",save_path)
- save_error = "" if error == OK else "No se pudo actualizar el guardado; se conserva la copia anterior."
+ save_error = "" if error == OK else "Could not update your save. The previous copy is preserved."
  return error == OK
 
 func load_game(backup := false) -> bool:
@@ -295,27 +295,27 @@ func report() -> String:
 func item_state(id: String) -> String:
  match id:
   "vent","atmosphere":
-   if emergency=="air": return "FLUJO BAJO · CO₂ SUBIENDO"
-   if "air_on" in completed: return "FLUJO RECUPERADO · CO₂ BAJANDO"
+   if emergency=="air": return "LOW AIRFLOW · CO₂ RISING"
+   if "air_on" in completed: return "AIRFLOW RESTORED · CO₂ FALLING"
   "water","filter":
-   if "water_test" in completed: return "AGUA COMPROBADA · CARTUCHO NUEVO"
-   if "water_read" in completed: return "MANTENIMIENTO · CARTUCHO SATURADO"
+   if "water_test" in completed: return "WATER CHECKED · NEW CARTRIDGE"
+   if "water_read" in completed: return "MAINTENANCE · CARTRIDGE FULL"
   "irrigation":
-   if optional.get("irrigation_paused",false): return "RIEGO EN PAUSA · RESERVA CONSERVADA"
-   if "restore_crops" in completed: return "RIEGO RESTABLECIDO"
+   if optional.get("irrigation_paused",false): return "WATERING PAUSED · RESERVE SAVED"
+   if "restore_crops" in completed: return "WATERING RESTORED"
   "rover":
-   if "rover" in rescues: return "REPARACIÓN ASISTIDA · MUESTRA EXTRA CANCELADA"
-   if "rover_test" in completed: return "PARCHE COMPROBADO · ROVER ESTACIONADO"
-   if emergency=="rover": return "GUARDABARROS DAÑADO"
+   if "rover" in rescues: return "ASSISTED REPAIR · EXTRA SAMPLE SKIPPED"
+   if "rover_test" in completed: return "PATCH CHECKED · ROVER PARKED"
+   if emergency=="rover": return "DUST GUARD DAMAGED"
   "shield","dose":
-   if emergency=="solar": return "ALERTA SOLAR · EQUIPO EN RETORNO"
-   if "shelter_all" in completed and not "wait_control" in completed: return "CINCO TRIPULANTES EN EL REFUGIO"
-   if "wait_control" in completed: return "CONTROL CONFIRMA FIN DE LA ALERTA"
-  "spares": return "FILTROS DE AIRE LOCALIZADOS: %d" % inventory.filtro_aire
-  "analyzer": return "CALIBRADO" if optional.get("calibrated",false) else "CALIBRACIÓN PENDIENTE"
+   if emergency=="solar": return "SOLAR ALERT · CREW RETURNING"
+   if "shelter_all" in completed and not "wait_control" in completed: return "FIVE CREW MEMBERS IN SHELTER"
+   if "wait_control" in completed: return "CONTROL CONFIRMS ALERT ENDED"
+  "spares": return "DUST FILTERS LOCATED: %d" % inventory.filtro_aire
+  "analyzer": return "CALIBRATED" if optional.get("calibrated",false) else "CALIBRATION PENDING"
   "food":
-   if choices.has("meal"): return "MENÚ SUAVE · CONDIMENTOS APARTE" if choices.meal==0 else "MENÚ SAZONADO · OPCIÓN SUAVE"
- return "DISPONIBLE PARA CONSULTA"
+   if choices.has("meal"): return "MILD MENU · SEASONINGS SEPARATE" if choices.meal==0 else "SEASONED MENU · MILD OPTION"
+ return "READY TO EXPLORE"
 
 func remember_character(id: String, at: Vector2, location: String, activity: String) -> void:
  characters[id]={"position":[at.x,at.y],"room":location,"activity":activity}

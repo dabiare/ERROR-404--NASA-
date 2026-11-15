@@ -44,7 +44,7 @@ func solve()->void:
   'cook':
    for i in [0,2,4]:await pick(i)
    await pick(1)
-  'search':await pick(1);await pick(4)
+  'search':await pick(1);await pick(4);await pick(0)
   'calibrate':
    for i in 4:await press(KEY_RIGHT)
    # Right adjusts the value; confirm is the fourth control.
@@ -88,15 +88,15 @@ func solve()->void:
   'chat':await pick(0)
  await advance_lines()
  if not game.ui.stack.is_empty() and not Mission.emergency.is_empty():
-  if not await choose('Entendido · Comenzar'):return
+  if not await choose("Got it · Begin"):return
 
 func select_card(id:String)->void:
  if game.ui.stack.is_empty():await press(KEY_T)
  var data:=Daily.find(id)
- var text:String=('◇ ' if data.optional else '★ ')+data.title+' · %d bloque(s) · %s'%[data.cost,game.Catalog.ROOMS[data.room]]
+ var text:String=('◇ ' if data.optional else '★ ')+data.title+" · %d block(s) · %s"%[data.cost,game.Catalog.ROOMS[data.room]]
  if not await choose(text):return
  if id=='prepare':
-  if not await choose('Almacén · Localiza un filtro de aire' if branch==0 else 'Laboratorio · Calibra el instrumento'):return
+  if not await choose("Storage · Find a spare dust filter" if branch==0 else "Laboratory · Check the instrument"):return
 
 func do_current()->void:
  var t:=Mission.current()
@@ -116,12 +116,12 @@ func run(g:Node)->void:
  game=g
  for selected in 2:
   branch=selected;game.start_new()
-  if not await choose('Omitir alunizaje'):return
+  if not await choose("Skip landing"):return
   await advance_lines()
   if not await go_room('shelter'):return
   await advance_lines()
-  if not await choose('Escuchamos al equipo'):return
-  if not await choose('Lunita'):return
+  if not await choose("Listen to the crew"):return
+  if not await choose('Moony'):return
   await advance_lines()
   for day_number in 3:
    var ids:Array={0:['checkup','meal','prepare'],1:['suit_check','eva2','dust_return','chat2'],2:['water','exercise','grow3','eva3']}[day_number]
@@ -132,13 +132,13 @@ func run(g:Node)->void:
     while not Mission.selected.is_empty():await do_current()
     if id=='checkup':
      await press(KEY_M)
-     if not await choose('Cerrar mapa'):return
+     if not await choose("Close map"):return
     if id=='water':
      await press(KEY_ESCAPE)
-     if not await choose('Guardar y salir al menú'):return
-     if not await choose('Continuar'):return
+     if not await choose("Save and return to menu"):return
+     if not await choose("Continue"):return
    await press(KEY_T)
-   if not await choose('Terminar jornada · Cena y señal'):return
+   if not await choose("End the day · Dinner and a signal"):return
    if not await go_room('shelter'):return
    var meal:Dictionary={}
    for entry in game.world.entries:
@@ -146,11 +146,12 @@ func run(g:Node)->void:
    if not await walk_to(meal.at):return
    await press(KEY_E);await advance_lines()
    if day_number<2:
-    if not await choose('Comenzar el día'):return
+    if not await choose("Start the day"):return
     await advance_lines()
    else:game.ui.clear()
   if Mission.phase!='complete':fail('Campaign not complete');return
   if Mission.rescues.size()>0:fail('Unexpected rescue');return
   print('DAILY_BRANCH ',branch,' PASS; cards=',Mission.cards.size())
  print('DAILY_TOUR PASS; minigames=',minigames,' frames=',frames)
+ if not Audio.missing_voice_lines.is_empty():fail('Missing English speech: '+str(Audio.missing_voice_lines));return
  Audio.shutdown();await get_tree().process_frame;OS.delay_msec(100);get_tree().quit()

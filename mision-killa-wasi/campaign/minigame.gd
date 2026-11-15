@@ -31,8 +31,8 @@ func setup(data:Dictionary,interface:CanvasLayer)->void:
 func _ready()->void:
  size=Vector2(900,440)
  instruction_label=ui.label(self,task.instruction,Rect2(25,5,850,60),21)
- detail=ui.label(self,'',Rect2(25,73,850,45),18,Color('74e1c6'))
- timer_label=ui.label(self,'',Rect2(25,365,850,45),17)
+ detail=ui.label(self,'',Rect2(25,73,850,65),18,Color('74e1c6'))
+ timer_label=ui.label(self,'',Rect2(25,365,850,55),17)
  Mission.minigame_running=true
  var saved:Dictionary=Mission.optional.get('activity_state',{})
  if saved.get('id','')==task.id:
@@ -63,72 +63,91 @@ func rebuild()->void:
 
 func options()->Array:
  match kind:
-  'scan':return ['Pulso ✓','Oxígeno ✓','Temperatura ✓','Imagen sin sensor','Dibujo del traje','Etiqueta vacía']
+  'scan':return ['Pulse\nHow fast your heart beats','Blood oxygen\nOxygen carried in your blood','Temperature\nHow warm your body is',"Suit picture — not a reading","Boot sketch — not a reading","Blank card — not a reading"]
   'cook':
-   if stage==0:return ['Arroz','Tortilla','Frijoles','Huevo','Zanahoria','Espinaca']
-   return ['Suave','Hierbas aparte','Picante aparte']
-  'search':return ['Cable','Filtro de aire A','Cartucho de agua','Tornillo','Filtro de aire B','Envase vacío']
-  'calibrate':return ['− Ajustar','Lectura: %d · Meta: 6'%value,'+ Ajustar','Comprobar']
+   if stage==0:return ["Rice · grain","Tortilla · grain","Beans · protein","Egg · protein","Carrot · vegetable","Spinach · vegetable"]
+   return ["Mild · no extra seasoning","Herbs on the side","Spicy sauce on the side"]
+  'search':
+   if stage==1:return ['Store filter · AD-42','Review the labels']
+   return ["Cable · power lead","FILTER BOX · AD-42\nSpare dust filter","WATER CARTRIDGE · WP-8\nFor the water unit","Bolt · B-12\nFastens equipment","SHELF TAG · AD-42\nDust-filter storage spot","EMPTY BOX · No code\nNo spare inside"]
+  'calibrate':return ["− Lower reading","Reading: %d · Reference: 6"%value,"+ Raise reading","Check result"]
   'air':
-   if stage==0:return ['Consultar sensor']
-   if stage==1:return ['Rejilla izquierda','Rejilla central','Rejilla derecha']
-   if stage==2:return ['← Girar aire','Ángulo: %d°'%value,'Girar aire →','Mantener E: encender']
-   return ['Verificar lectura']
+   if stage==0:return ["Read airflow sensor"]
+   if stage==1:return ["Vacuum left vent section","Vacuum middle vent section","Vacuum right vent section"]
+   if stage==2:return ["← Aim left","Fan angle: %d°"%value,"Aim right →","Hold E to run the fan"]
+   return ["Check the final sensor reading"]
   'suit':
-   if stage==0:return ['Cómodo · preparación larga','Alta presión · −8 energía']
-   return ['Revisar sellos','Probar radio','Preparación con el médico']
-  'field':return ['Registrar textura','Registrar ubicación','Mover instrumento']
+   if stage==0:return ["Comfort suit\nLonger preparation","Higher-pressure suit\nShorter preparation · −8 power"]
+   return ['Inspect suit seals\nCheck that closing edges are clean','Radio check\nSend a message and hear a reply',"Pressure preparation\nFollow the doctor's breathing protocol"]
+  'field':return ["Write down the rock's texture","Log where the rock was found","Reposition the signal instrument"]
   'assemble':
-   if stage==0:return ['Lámina flexible','Cinta compatible','Abrazaderas','Pieza que roza','Bolsa abierta','Tornillo incompatible']
-   return ['Cubrir con lámina','Sujetar con cinta','Ajustar abrazaderas']
-  'clean':return ['Botas','Guantes','Uniones'] if stage==0 else ['Inspeccionar sellos limpios']
+   if stage==0:return ["Flexible sheet · covers the gap","Suitable tape · holds the sheet","Clamps · secure the patch","Oversized plate · rubs the wheel","Loose bag · cannot stay secure","Wrong bolt · does not fit"]
+   return ["1 · Cover the gap with the sheet","2 · Hold the sheet with tape","3 · Secure and check the clamps"]
+  'clean':return ["Boots · hold to vacuum","Gloves · hold to vacuum","Suit joints · hold to vacuum"] if stage==0 else ["Inspect the cleaned seals"]
   'pipes':
-   if stage==0:return ['Usar una reserva de agua','Pausar el riego']
-   if stage==1:return ['Tramo 1: %d°'%(pipes[0]*90),'Tramo 2: %d°'%(pipes[1]*90),'Tramo 3: %d°'%(pipes[2]*90),'Tramo 4: %d°'%(pipes[3]*90),'Comprobar conexión']
-   if stage==2:return ['Filtro de aire','Cartucho de agua']
-   return ['Comprobar calidad del agua']
-  'rhythm':return ['← Resistencia','→ Bicicleta','Practicar sin ritmo']
-  'solar':return ['Dejar bolsa · volver ahora','Recoger bolsa · −30 segundos']
-  'lock':return ['Cerrar puerta exterior','Comprobar presión','Abrir puerta interior']
-  'shelter':return ['Comandante','Ingeniero jefe','Bióloga botánica','Médico de vuelo','Geólogo lunar','Comprobar dosímetro y radio']
-  'chat':return ['Escuchar sin interrumpir','Ofrecer una pausa','Pedir apoyo al equipo']
-  'grow':return ['Observar luz','Medir humedad','Comprobar riego']
- return ['Comprobar']
+   if stage==0:return ["Use one water reserve\nKeep watering plants","Pause plant watering\nKeep our reserve"]
+   if stage==1:return ["Pipe 1: %d°"%(pipes[0]*90),"Pipe 2: %d°"%(pipes[1]*90),"Pipe 3: %d°"%(pipes[2]*90),"Pipe 4: %d°"%(pipes[3]*90),"Test the connected pipes"]
+   if stage==2:return ["Dust filter · air system only","WATER CARTRIDGE · WP-8\nFor the water unit"]
+   return ["Test water quality before use"]
+  'rhythm':return ["← Resistance exercise","→ Cycling exercise","Untimed practice\nSame mission card"]
+  'solar':return ["Leave the optional bag\nReturn immediately","Pick up the optional bag\nUse 30 seconds"]
+  'lock':return ["1 · Close the outer door","2 · Check the pressure","3 · Open the inner door"]
+  'shelter':return ["Commander","Chief engineer","Botanist","Flight doctor","Lunar geologist","Read dosimeter and contact Control"]
+  'chat':return ["Listen without interrupting","Offer a break","Ask the crew for support"]
+  'grow':return ['Check the plant light\nLeaves need light to grow','Read the moisture sensor\nSee how damp the roots are','Check the watering system\nConfirm roots receive water']
+ return ["Check result"]
 
 func status_text()->String:
- if kind=='cook' and stage==0:return 'Combina un cereal, una proteína y una verdura.'
- if kind=='pipes' and stage==1:return 'Conecta cuatro tramos horizontales. Cada selección gira una pieza.'
- if kind=='air' and stage==1 or kind=='clean' and stage==0:return 'Escoge una zona. Mantén E, Espacio o clic para aspirar.'
- if kind=='air' and stage==2:return 'Dirige el aire a 35°. Mantén E para activar el flujo.'
- if kind=='rhythm':return 'Alterna izquierda y derecha cuando el pulso entra al círculo.'
- return 'Flechas: elegir · Enter: confirmar · R: ayuda voluntaria'
+ if kind=='search':return 'Match confirmed. Store one filter, or review your label choices.' if stage==1 else 'These cards show box and shelf labels. Select the two marked AD-42.'
+ if kind=='scan':return 'Select a sensor card to copy its reading to the doctor’s tablet.'
+ if kind=='calibrate':return 'Our test sample should read 6. Left/right adjusts; Enter checks your instrument.'
+ if kind=='suit':return 'Choose a suit; preparation is summarized in game time, not real medical minutes.' if stage==0 else 'Each check records one part of our supervised preflight checklist.'
+ if kind=='field':return 'Selecting each card writes an observation or records the instrument’s new position.'
+ if kind=='assemble':return 'Pick three materials that cover the gap and stay secure.' if stage==0 else 'Fit the sheet first, tape second, and clamps last. Then check wheel clearance.'
+ if kind=='clean' and stage==1:return 'Dust is contained. Inspect the seals before entering the living area.'
+ if kind=='pipes' and stage==0:return 'Spend one reserve to keep services running, or pause watering until repairs finish.'
+ if kind=='pipes' and stage==2:return 'The pipes connect. Choose the part labeled for the water unit, not air.'
+ if kind=='pipes' and stage==3:return 'A connected pipe is not enough: check water quality before restoring the supply.'
+ if kind=='shelter':return 'Select each name to check that person is inside. Then read instruments and call Control.'
+ if kind=='solar':return 'Both choices start your return. The bag is optional; your crew’s safety comes first.'
+ if kind=='lock':return 'Each card performs the next airlock step. The outer door must close first.'
+ if kind=='grow':return 'Check light and moisture, then confirm the plants are receiving water.'
+ if kind=='chat':return 'Choose a kind response. Every option offers support; none is a trick answer.'
+ if kind=='cook' and stage==0:return "Choose one grain, one protein, and one vegetable; then choose seasonings."
+ if kind=='pipes' and stage==1:return "Rotate each pipe until all four form a horizontal line. Then test them."
+ if kind=='air' and stage==1 or kind=='clean' and stage==0:return "Choose a section. Hold E, Space, or the mouse button to vacuum it."
+ if kind=='air' and stage==2:return "Aim the fan at the marked 35° direction. Hold E to run it."
+ if kind=='rhythm':return "Alternate left and right when the moving dot reaches the circle; or choose practice."
+ return "Arrows: choose · Enter: select · R: ask for help"
 
 func hint(level:int)->String:
  if level==0:return task.science
  if level==1:return status_text()
  match kind:
-  'scan':return 'Comprueba pulso, oxígeno y temperatura. El médico interpreta las lecturas.'
-  'cook':return 'Elige un alimento de cada pareja. Después ofrece condimentos por separado.'
-  'search':return 'Busca las dos etiquetas que dicen filtro de aire.'
-  'calibrate':return 'Ajusta la lectura hasta seis y pulsa Comprobar.'
-  'air':return ['Consulta el sensor.','Aspira las tres zonas manteniendo E.','Ajusta a treinta y cinco grados. Mantén E.','Comprueba la lectura final.'][stage]
-  'assemble':return 'Elige lámina, cinta y abrazaderas. Después colócalas en ese orden.'
-  'pipes':return 'Elige una reserva o pausa. Alinea tramos; instala cartucho de agua y verifica.'
-  'shelter':return 'Cuenta las cinco personas antes de comprobar dosímetro y radio.'
-  'rhythm':return 'También puedes elegir Practicar sin ritmo. Obtienes la misma carta.'
- return 'Completa cada acción marcada antes de confirmar el resultado.'
+  'scan':return "Select the three measurement cards: pulse, blood oxygen, and temperature. I interpret them."
+  'cook':return "Each pair belongs to one food group. Pick one per group, then offer seasonings."
+  'search':return "Select the AD-42 filter box and AD-42 shelf tag. Then choose Store filter."
+  'calibrate':return "Use left or right until the reading is six, then select Check result."
+  'air':return ["Select Read airflow sensor to see what needs fixing.","Select each vent section and hold E until its dust is cleared.","Aim at 35° with left and right, then hold E to move air.","Select the final sensor reading to check that airflow improved."][stage]
+  'assemble':return "Choose sheet, tape, and clamps. Fit them in that order; nothing should rub the wheel."
+  'pipes':return "Choose a water plan, straighten pipes, select the water cartridge, and test quality."
+  'shelter':return "Select all five crew members first. Then check the dosimeter and radio."
+  'rhythm':return "Untimed practice earns the same card. Use down and Enter, or click Practice."
+ return "Complete each marked action before checking the result."
 
 func wrong(text:String)->void:
  mistakes+=1;feedback=text;rebuild()
- if Mission.rank=='Cadete' and mistakes==2:ui.toast('¿Una pista? Pulsa R cuando quieras.')
+ if Mission.rank=="Cadet" and mistakes==2:ui.toast("Want a hint? Press R whenever you like.")
 
 func choose(index:int)->void:
  if completed or Mission.locks!=1 or not Mission.focused:return
  feedback='';cursor=index
  match kind:
   'scan','field','grow':
-   if index>2:wrong('Ese dibujo no es una lectura. Busca los sensores.');return
-   if not index in chosen:chosen.append(index);Audio.confirm()
+   if index>2:wrong("That is a picture, not a measurement. Look for the three sensor cards.");return
+   if not index in chosen:
+    chosen.append(index);Audio.confirm()
+    feedback={'scan':['Pulse reading sent to the doctor.','Blood-oxygen reading sent to the doctor.','Temperature reading sent to the doctor.'],'field':['Texture recorded: rough, with small grains.','Location recorded: our marked observation site.','Instrument repositioned; the signal reading is recorded.'],'grow':['Light checked. The plant lamp is working.','Moisture reading recorded for the botanist.','Watering checked and recorded.']}[kind][index]
    if chosen.size()==3:finish();return
   'cook':
    if stage==1:result.season=index;finish();return
@@ -137,15 +156,19 @@ func choose(index:int)->void:
    chosen.append(index)
    if chosen.size()==3:stage=1;chosen.clear();cursor=0
   'search':
-   if not index in [1,4]:wrong('¡Esa pieza tiene otro trabajo! Mira la etiqueta.');return
+   if stage==1:
+    if index==0:result.storage_code='AD-42';finish();return
+    stage=0;chosen.clear();cursor=0;rebuild();return
+   if not index in [1,4]:wrong("Different code, different job! Find the box and shelf tag that both say AD-42.");return
    if not index in chosen:chosen.append(index)
-   if chosen.size()==2:finish();return
+   feedback='Filter box checked. Now find the AD-42 shelf tag.' if index==1 else 'Shelf tag checked. Now find the AD-42 filter box.'
+   if chosen.size()==2:stage=1;cursor=0;feedback='Both codes say AD-42. Store the box to log one spare filter.'
   'calibrate':
    if index==0:value=maxi(0,value-1)
    elif index==2:value=mini(10,value+1)
    elif index==3:
     if value==6:finish();return
-    wrong('La referencia marca seis. Ajusta un poquito más.');return
+    wrong("Our known reference reads six. Adjust until this reading matches it.");return
   'air':
    if stage==0:stage=1;chosen.clear();cursor=0
    elif stage==1:return
@@ -165,11 +188,11 @@ func choose(index:int)->void:
     if chosen.size()==3:finish();return
   'assemble','lock':
    if kind=='assemble' and stage==0:
-    if index>2:wrong('Esa pieza podría soltarse o rozar. Prueba otra.');return
+    if index>2:wrong("That part might come loose or rub the wheel. Choose secure, well-fitting materials.");return
     if not index in chosen:chosen.append(index)
     if chosen.size()==3:stage=1;chosen.clear();cursor=0
    else:
-    if index!=chosen.size():wrong('Comprueba primero el paso anterior.');return
+    if index!=chosen.size():wrong("First finish the previous step. We need to secure each part in order.");return
     chosen.append(index)
     if chosen.size()==3:finish();return
   'pipes':
@@ -177,21 +200,21 @@ func choose(index:int)->void:
    elif stage==1:
     if index<4:pipes[index]=(int(pipes[index])+1)%4
     elif pipes.all(func(p):return p==0):stage=2;cursor=0
-    else:wrong('Todavía hay un tramo girado. Busca la línea horizontal.');return
+    else:wrong("One pipe is still turned. Rotate the pipes until their paths line up horizontally.");return
    elif stage==2:
-    if index==0:wrong('Ese filtro trabaja con aire. Necesitamos el cartucho de agua.');return
+    if index==0:wrong("This catches dust in air. Our water unit needs its matching water cartridge.");return
     stage=3;cursor=0
    else:finish();return
   'rhythm':
    if index==2:result.practice=true;rhythm_hits+=1
-   elif index!=rhythm_hits%2:wrong('Alterna los lados. ¡Sin prisa, podemos practicar!');return
+   elif index!=rhythm_hits%2:wrong("Alternate sides. We can practice without a timer, too!");return
    elif absf(fmod(beat_clock,1.6)-0.8)<0.45:rhythm_hits+=1
-   else:wrong('Espera al pulso dentro del círculo.');return
+   else:wrong("Wait until the moving dot reaches the circle, then press the next side.");return
    if rhythm_hits>=8:finish();return
   'solar':result.solar=index;finish();return
   'shelter':
    if index==5:
-    if chosen.size()<5:wrong('Falta pasar lista. Contemos cinco personas.');return
+    if chosen.size()<5:wrong("Someone has not been counted. Check off all five crew members first.");return
     finish();return
    if not index in chosen:chosen.append(index)
   'chat':result.support=index;finish();return
@@ -248,10 +271,20 @@ func _process(delta:float)->void:
   progress+=delta
   if progress>=1.0:stage=3;progress=0;cursor=0;rebuild()
  else:progress=maxf(0,progress-delta*0.5)
- timer_label.text='Comprobados: %d  ·  %s'%[rhythm_hits if kind=='rhythm' else chosen.size(),feedback]
+ timer_label.text=progress_text()
  for i in action_buttons.size():
   action_buttons[i].modulate=Color('74e1c6') if i in chosen else Color.WHITE
  queue_redraw()
+
+func progress_text()->String:
+ if kind=='search':return 'Matching labels: %d / 2 · One spare filter will be registered.'%chosen.size()
+ if kind=='scan':return 'Readings copied: %d / 3 · The doctor interprets the results.'%chosen.size()
+ if kind=='cook':return 'Food groups chosen: %d / 3'%chosen.size() if stage==0 else 'Balanced plate ready. Choose seasoning on the side.'
+ if kind=='rhythm':return 'Movements practiced: %d / 8 · Rest and support are always available.'%rhythm_hits
+ if kind=='shelter':return 'Crew members counted inside: %d / 5'%chosen.size()
+ if kind=='air':return ['Sensor: airflow low · Vent inspection needed.','Vent sections cleared: %d / 3'%chosen.size(),'Match the 35° marker to direct airflow.','Airflow restored · The separate scrubber removes CO₂.'][stage]
+ if kind=='clean':return 'Suit zones cleaned: %d / 3'%chosen.size() if stage==0 else 'Dust contained · Ready to inspect the seals.'
+ return 'Steps recorded: %d'%chosen.size()
 
 func save_progress()->void:
  if completed:return
@@ -265,7 +298,7 @@ func _draw()->void:
  if kind=='air' and stage==2:
   var center:=Vector2(600,310)
   draw_line(center,center+Vector2.from_angle(deg_to_rad(-value))*90,Color('73d9e5'),5)
-  draw_string(ThemeDB.fallback_font,Vector2(35,310),'SENSOR: visualización del flujo; el CO₂ es invisible.',HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color('ffce88'))
+  draw_string(ThemeDB.fallback_font,Vector2(35,310),"SENSOR VIEW: airflow display. Carbon dioxide itself is invisible.",HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color('ffce88'))
  if kind=='pipes' and stage==1:
   for i in 4:
    var center:=Vector2(310+i*115,325)

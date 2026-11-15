@@ -10,21 +10,21 @@ config_version=5
 
 [application]
 
-config/name="Misión Killa Wasi — Campaña de tres días"
+config/name="Mission Killa Wasi — Three-day campaign"
 run/main_scene="res://campaign/main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="KillaWasi"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+general/text_to_speech=true
+
 [autoload]
 
 Mission="*res://campaign/daily_mission.gd"
 Audio="*res://campaign/audio.gd"
-
-[audio]
-
-general/text_to_speech=true
 
 [display]
 

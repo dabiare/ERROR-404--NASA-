@@ -14,7 +14,7 @@ func run(game:Node)->void:
  Mission.emergency_started.disconnect(game.emergency_notice)
  Mission.rescue_requested.disconnect(game.rescued)
  Mission.set_process(false)
- for rank in ['Cadete','Comandante']:
+ for rank in ["Cadet","Commander"]:
   for priority in ['storage','lab']:
    for water in 2:
     Mission.reset();Mission.rank=rank;Mission.priority=priority;Mission.focused=true
@@ -23,7 +23,7 @@ func run(game:Node)->void:
     for id in ['meal','prepare','checkup']:
      choose(id);finish(id)
     check(Mission.selected=='air' and Mission.emergency=='air','Air incident once essentials finish')
-    check(Mission.remaining==(135 if rank=='Cadete' else 90),'Rank timer')
+    check(Mission.remaining==(135 if rank=="Cadet" else 90),'Rank timer')
     var before:float=Mission.remaining
     Mission.tick(5);check(Mission.remaining==before,'Brief pauses clock')
     clear_alarm();Mission.locks=1;Mission.minigame_running=true
@@ -76,6 +76,35 @@ func run(game:Node)->void:
   Mission.tick(99);check(Mission.rescues.size()==1,'Rescue unique')
  var words_bad:Array=[]
  check(Daily.audit().is_empty(),'Dialogue and vocabulary audit: '+str(Daily.audit()))
+ var signatures:Array=[]
+ for profile in Audio.VOICE_PROFILES.values():
+  var signature:=JSON.stringify(profile)
+  check(not signature in signatures,'Unique character voice profile')
+  signatures.append(signature)
+ for t in Daily.tasks():check(t.has('why') and t.why.length()>25,'Purpose before action: '+t.id)
+ check(Daily.find('prepare','lab').why==Daily.WHY.calibrate,'Laboratory gets its own purpose')
+ var old_save:Dictionary=Mission.snapshot().duplicate(true)
+ old_save.rank='Cadete';check(Mission.valid_save(old_save),'Older Spanish rank is readable')
+ for t in Daily.tasks():
+  for key in ['why','instruction','science']:
+   var words:PackedStringArray=t[key].split(' ',false)
+   for start in range(0,words.size(),15):
+    var page:String=' '.join(words.slice(start,mini(start+15,words.size())))
+    check(ResourceLoader.exists(Audio.voice_clip_path(page)),'Bundled English speech: '+t.id+' '+key)
+ Mission.reset();Mission.complete(0);Mission.priority='storage';Mission.selected='prepare';Mission.focused=true
+ game.ui.open_minigame(Daily.find('prepare'))
+ game.ui.active_game.choose(1);game.ui.active_game.choose(4)
+ check(game.ui.active_game.stage==1 and Mission.inventory.filtro_aire==0,'Matching is explained before storing')
+ game.ui.active_game.choose(0)
+ check(Mission.inventory.filtro_aire==1 and 'prepare' in Mission.cards,'Store confirmation registers one filter')
+ game.ui.clear();game.ui.active_game=null
+ for t in Daily.tasks():
+  Mission.selected=t.id;Mission.room=t.room;Mission.priority='storage'
+  game.begin_task()
+  var briefing:Control=game.ui.stack[-1].get_meta('panel')
+  check(briefing.get_meta('typing').text==t.why,'NPC explains why before ordering: '+t.id)
+  check(briefing.get_meta('speaker')==t.speaker,'Correct speaker owns task briefing: '+t.id)
+  game.ui.clear()
  Mission.reset();Mission.complete(0);Mission.jornada=3;Mission.selected='water';Mission.focused=true
  game.ui.open_minigame(Daily.find('water'))
  var activity=game.ui.active_game

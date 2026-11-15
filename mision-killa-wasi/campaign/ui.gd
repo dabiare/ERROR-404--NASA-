@@ -34,9 +34,9 @@ func _ready() -> void:
  timer=label(hud,"",Rect2(1000,43,255,40),26,Color("ffb987"))
  panel(hud,Rect2(0,666,1280,54),Color("0b1829"))
  hint=label(hud,"",Rect2(70,680,685,30),17)
- button(hud,"R · Ayuda del robot",Rect2(800,675,220,34),show_help)
- button(hud,"M · Mapa",Rect2(1030,675,110,34),show_map)
- button(hud,"Esc · Pausa",Rect2(1150,675,115,34),show_pause)
+ button(hud,"R · Robot help",Rect2(800,675,220,34),show_help)
+ button(hud,"M · Map",Rect2(1030,675,110,34),show_map)
+ button(hud,"Esc · Pause",Rect2(1150,675,115,34),show_pause)
  current_icon=HudIcon.new()
  current_icon.position=Vector2(20,675)
  current_icon.size=Vector2(32,32)
@@ -143,7 +143,7 @@ func toast(text: String) -> void:
  notice_time=5
 
 func show_lines(lines: Array, done:=Callable(), meeting:=false) -> void:
- var p:=push("COMUNICACIÓN DE LA TRIPULACIÓN",Rect2(140,435,1000,220) if meeting else Rect2(140,270,1000,350))
+ var p:=push("CREW COMMUNICATION",Rect2(140,435,1000,220) if meeting else Rect2(140,270,1000,350))
  if meeting:
   var header: Label=p.get_child(0)
   header.add_theme_font_size_override("font_size",18)
@@ -163,7 +163,7 @@ func show_lines(lines: Array, done:=Callable(), meeting:=false) -> void:
   body.visible_characters=0
   p.set_meta("typing",body)
   p.set_meta("speaker",line[0])
-  counter.text="%d / %d · Enter o Espacio" % [index[0]+1,lines.size()]
+  counter.text="%d / %d · Enter or Space" % [index[0]+1,lines.size()]
  var next:=func():
   if body.visible_characters>=0 and body.visible_characters<body.text.length(): body.visible_characters=-1; Audio.voice.stop(); return
   index[0]+=1
@@ -171,7 +171,7 @@ func show_lines(lines: Array, done:=Callable(), meeting:=false) -> void:
    pop()
    if done.is_valid(): done.call()
   else: apply_page.call()
- var b:=button(p,"Continuar  →",Rect2(745,165,220,40) if meeting else Rect2(745,275,220,45),next)
+ var b:=button(p,"Continue  →",Rect2(745,165,220,40) if meeting else Rect2(745,275,220,45),next)
  p.set_meta("advance",next)
  apply_page.call()
  b.grab_focus()
@@ -187,7 +187,7 @@ func show_item(entry: Dictionary) -> void:
  if t.get("target","")==entry.id and t.get("room","")==Mission.room:
   button(p,"Realizar tarea: "+t.title,Rect2(35,355,895,52),func(): pop(); game.begin_task()).grab_focus()
  else:
-  button(p,"Seguir explorando",Rect2(255,355,675,52),pop).grab_focus()
+  button(p,"Keep exploring",Rect2(255,355,675,52),pop).grab_focus()
  if entry.id=="spares" and Mission.priority=="lab" and "prepare" in Mission.completed and not Mission.optional.get("storage_later",false):
   button(p,"Completar preparación pendiente del almacén",Rect2(35,420,895,48),func(): Mission.optional_action("storage_later"); pop(); toast("Filtro de aire localizado y registrado."))
  if entry.id=="analyzer" and Mission.priority=="storage" and "prepare" in Mission.completed and not Mission.optional.get("lab_later",false):
@@ -212,7 +212,7 @@ func show_task() -> void:
     else: pop(); game.perform_task(chosen))
   if i==0: b.grab_focus()
  button(p,"R · Pedir una pista",Rect2(190,435,345,45),show_help)
- button(p,"Volver",Rect2(550,435,360,45),pop)
+ button(p,"Back",Rect2(550,435,360,45),pop)
 
 func confirm_choice(t: Dictionary, chosen: int) -> void:
  var p:=push("CONFIRMAR PRIORIDAD",Rect2(250,200,780,350))
@@ -242,12 +242,12 @@ func show_map() -> void:
  picture(p,load(Catalog.ART+"mapa_base_killa_wasi_sistemas_v2.png"),Rect2(25,85,735,405))
  var t:=Mission.current()
  label(p,"ESTÁS EN\n"+Catalog.ROOMS[Mission.room]+"\n\nDESTINO\n"+Catalog.ROOMS.get(t.get("room","corridor"),"Base")+"\n\nLas puertas conectan con los pasillos. Higiene se accede desde el dormitorio.",Rect2(785,100,235,310),18)
- button(p,"Cerrar mapa",Rect2(785,425,235,55),pop).grab_focus()
+ button(p,"Close map",Rect2(785,425,235,55),pop).grab_focus()
 
 func show_pause() -> void:
- var p:=push("PAUSA Y OPCIONES")
+ var p:=push("PAUSE AND OPTIONS")
  for i in 3:
-  var names: Array=["Música","Efectos y alarma","Voz del robot"]
+  var names: Array=["Music","Effects and alarm","Spoken voices"]
   var keys: Array=["music","effects","voice"]
   label(p,names[i],Rect2(40,100+i*62,260,35),21)
   var slider:=HSlider.new()
@@ -261,21 +261,21 @@ func show_pause() -> void:
   slider.value_changed.connect(func(value): Mission.settings[key]=value; Audio.set_levels(); Mission.save_settings())
   p.add_child(slider)
  var reduced:=CheckButton.new()
- reduced.text="Movimiento reducido"
+ reduced.text="Reduced motion"
  reduced.add_theme_font_size_override("font_size",20)
  reduced.position=Vector2(40,300)
  reduced.button_pressed=Mission.reduced_motion
  reduced.toggled.connect(func(value): Mission.reduced_motion=value; Mission.save_settings(); refresh_icon(true))
  p.add_child(reduced)
- button(p,"Volver",Rect2(40,370,270,50),pop).grab_focus()
- button(p,"Fuentes y créditos",Rect2(340,370,280,50),show_sources)
- button(p,"Guardar y salir al menú",Rect2(40,435,580,45),func():
+ button(p,"Back",Rect2(40,370,270,50),pop).grab_focus()
+ button(p,"Sources and credits",Rect2(340,370,280,50),show_sources)
+ button(p,"Save and return to menu",Rect2(40,435,580,45),func():
   if Mission.active: Mission.position=game.hero.position; Mission.save_game()
   clear(); game.show_menu())
- button(p,"Informe de la misión",Rect2(650,370,280,110),show_report)
+ button(p,"Mission report",Rect2(650,370,280,110),show_report)
 
 func show_sources() -> void:
- var p:=push("CIENCIA Y CRÉDITOS")
+ var p:=push("SCIENCE AND CREDITS")
  var scroll:=ScrollContainer.new()
  scroll.position=Vector2(30,90)
  scroll.size=Vector2(910,330)
@@ -286,14 +286,14 @@ func show_sources() -> void:
  text.fit_content=true
  text.bbcode_enabled=true
  text.add_theme_font_size_override("normal_font_size",18)
- var content:="Proyecto del equipo ERROR 404 · Misión Killa Wasi\nArte del equipo y complementos de ImageGen. Música y Blip aportados por el equipo.\n\nLos tiempos son retos del juego; no son procedimientos médicos.\n\n"
+ var content:="Team ERROR 404 · Mission Killa Wasi\nArtwork by the team, with ImageGen additions. Music and Blip supplied by the team.\n\nTimers are game challenges, not medical procedures.\nSpeech uses installed English system voices, with a different voice profile for each character.\n\n"
  for entry in Catalog.items(): content+="[b]"+entry.title+"[/b]\n"+entry.source+"\n\n"
  text.text=content
  scroll.add_child(text)
- button(p,"Volver",Rect2(635,435,300,48),pop).grab_focus()
+ button(p,"Back",Rect2(635,435,300,48),pop).grab_focus()
 
 func show_report() -> void:
- var p:=push("INFORME · DÍA %d" % Mission.day())
+ var p:=push("REPORT · DAY %d" % Mission.day())
  var scroll:=ScrollContainer.new()
  scroll.position=Vector2(40,90)
  scroll.size=Vector2(890,315)
@@ -301,8 +301,8 @@ func show_report() -> void:
  scroll.get_v_scroll_bar().focus_mode=Control.FOCUS_ALL
  var body:=label(scroll,Mission.report(),Rect2(0,0,855,0),20)
  body.custom_minimum_size.x=855
- button(p,"Seguir explorando",Rect2(40,425,420,50),pop).grab_focus()
- button(p,"Volver al menú",Rect2(490,425,440,50),func(): Mission.save_game(); clear(); game.show_menu())
+ button(p,"Keep exploring",Rect2(40,425,420,50),pop).grab_focus()
+ button(p,"Return to menu",Rect2(490,425,440,50),func(): Mission.save_game(); clear(); game.show_menu())
 
 func refresh_icon(force:=false) -> void:
  var t:=Mission.current()
@@ -321,8 +321,8 @@ func _process(delta: float) -> void:
  hud.visible=Mission.active
  if Mission.active:
   var t:=Mission.current()
-  title.text="Día %d · %s" % [Mission.day(),Catalog.ROOMS[Mission.room]]
-  objective.text=t.get("title","Primeros tres días completados · Explora la base")
+  title.text="Day %d · %s" % [Mission.day(),Catalog.ROOMS[Mission.room]]
+  objective.text=t.get("title","First three days complete · Explore the base")
   status.text="Agua reserva: %d   ·   Muestras: %d   ·   Registros: %d   ·   Sistemas: %d/26" % [Mission.inventory.agua_reserva,Mission.inventory.muestras,Mission.inventory.registros,Mission.visited.size()]
   if not Mission.save_error.is_empty(): status.text=Mission.save_error
   timer.text="%02d:%02d  %s" % [int(Mission.remaining)/60,int(Mission.remaining)%60,"Ⅱ" if not Mission.movable() else ""] if not Mission.emergency.is_empty() else ""

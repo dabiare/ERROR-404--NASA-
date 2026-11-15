@@ -4,8 +4,8 @@ var jornada:=1
 var phase:='arrival'
 var selected:=''
 var blocks:=3
-var rank:='Cadete'
-var robot_name:='Robot guía'
+var rank:="Cadet"
+var robot_name:="Guide robot"
 var resources:Dictionary={'oxigeno':100,'agua':100,'comida':100,'energia':100}
 var morale:Dictionary={'commander':75,'engineer':75,'botanist':75,'doctor':75,'geologist':75}
 var cards:Array=[]
@@ -19,10 +19,12 @@ func _ready()->void:
  super._ready()
  test_mode='--daily-test' in OS.get_cmdline_user_args() or '--daily-tour' in OS.get_cmdline_user_args() or '--daily-visual' in OS.get_cmdline_user_args()
  save_path='user://test_daily_v2.json' if test_mode else 'user://campaign_v2.json'
+ if '--daily-tour' in OS.get_cmdline_user_args():save_path='user://test_daily_tour_v2.json'
+ elif '--daily-visual' in OS.get_cmdline_user_args():save_path='user://test_daily_visual_v2.json'
 
 func reset()->void:
  super.reset()
- jornada=1;phase='arrival';selected='';blocks=3;robot_name='Robot guía'
+ jornada=1;phase='arrival';selected='';blocks=3;robot_name="Guide robot"
  resources={'oxigeno':100,'agua':100,'comida':100,'energia':100}
  morale={'commander':75,'engineer':75,'botanist':75,'doctor':75,'geologist':75}
  cards.clear();badges.clear();results.clear();minigame_running=false;unread_tasks=true
@@ -30,11 +32,11 @@ func reset()->void:
 func day()->int: return jornada
 
 func current()->Dictionary:
- if phase=='arrival': return {'id':'meeting','room':'shelter','target':'shield','title':'Conoce al equipo','speaker':'commander','choices':['Saludar'],'correct':0}
+ if phase=='arrival': return {'id':'meeting','room':'shelter','target':'shield','title':"Meet the crew",'speaker':'commander','choices':['Saludar'],'correct':0}
  if not selected.is_empty(): return Daily.find(selected,priority)
- if phase=='night': return {'id':'night','room':'shelter','target':'food','title':'Cena y señal misteriosa','speaker':'robot','choices':['Cenar'],'correct':0}
+ if phase=='night': return {'id':'night','room':'shelter','target':'food','title':"Dinner and a mysterious signal",'speaker':'robot','choices':['Cenar'],'correct':0}
  if phase=='complete': return {}
- return {'id':'planning','room':'command','target':'command','title':'Elige una tarea en la pizarra','speaker':'commander','choices':['Planificar'],'correct':0}
+ return {'id':'planning','room':'command','target':'command','title':"Choose a task on the board",'speaker':'commander','choices':['Planificar'],'correct':0}
 
 func available()->Array:
  var list:Array=[]
@@ -61,7 +63,7 @@ func begin_night()->bool:
 func finish_night()->bool:
  if phase!='night': return false
  if jornada==3:
-  phase='complete';badges.append('Luz verde');optional.green_light=true
+  phase='complete';badges.append("Green light");optional.green_light=true
  else:
   jornada+=1;blocks=5;phase='planning'
  selected='';step+=1;unread_tasks=true;save_game();changed.emit();return true
@@ -92,13 +94,13 @@ func finish_activity(id:String,result:Dictionary)->bool:
    if priority=='lab':optional.calibrated=true
    else:inventory.filtro_aire+=1
   'air':
-   emergency='';remaining=0;completed.append('air_on');badges.append('Aire limpio')
+   emergency='';remaining=0;completed.append('air_on');badges.append("Clean air")
   'suit_check':
    choices.suit=int(result.get('suit',0));completed.append('prebreathe')
    if choices.suit==1:resources.energia-=8
   'eva2':inventory.registros+=1;optional.instrument_moved=true
   'rover':
-   emergency='';remaining=0;completed.append('rover_test');badges.append('Rover salvado')
+   emergency='';remaining=0;completed.append('rover_test');badges.append("Rover repaired")
   'dust_return':optional.seals_clean=true
   'water':
    choices.water_choice=int(result.get('water',0));inventory.cartucho_agua-=1
@@ -111,7 +113,7 @@ func finish_activity(id:String,result:Dictionary)->bool:
    choices.solar_choice=int(result.get('solar',0));optional.solar_bag=choices.solar_choice==1
    if optional.solar_bag:remaining=maxf(1,remaining-30)
   'shelter_all':
-   emergency='';remaining=0;badges.append('Equipo a salvo')
+   emergency='';remaining=0;badges.append("Crew safe")
    if optional.get('solar_bag',false):inventory.muestras+=1
   'grow2','grow3':optional.irrigation_paused=false;optional.plant_growth=true
   'chat2','chat3':
@@ -127,7 +129,7 @@ func finish_activity(id:String,result:Dictionary)->bool:
  save_game();changed.emit();return true
 
 func start_emergency(kind:String,seconds:float)->void:
- super.start_emergency(kind,seconds*(1.5 if rank=='Cadete' else 1.0))
+ super.start_emergency(kind,seconds*(1.5 if rank=="Cadet" else 1.0))
 
 func clock_running()->bool:
  return active and focused and not transition and not optional.get('emergency_brief_pending',false) and (locks==0 or minigame_running and locks==1)
@@ -177,7 +179,7 @@ func valid_save(data:Variant)->bool:
  for key in ['jornada','phase','selected','blocks','rank','robot_name','resources','morale','cards','badges','results']:
   if not data.has(key):return false
  if not (data.jornada is float or data.jornada is int) or int(data.jornada)<1 or int(data.jornada)>3 or not data.phase in ['arrival','planning','night','complete']:return false
- if not data.rank in ['Cadete','Comandante'] or not data.robot_name is String:return false
+ if not normalize_rank(str(data.rank)) in ["Cadet","Commander"] or not data.robot_name is String:return false
  if not data.blocks is float and not data.blocks is int:return false
  if data.blocks<0 or data.blocks>5:return false
  if not data.selected is String or data.selected!='' and Daily.find(data.selected).is_empty():return false
@@ -198,18 +200,24 @@ func valid_save(data:Variant)->bool:
 func load_game(backup:=false)->bool:
  if not super.load_game(backup):return false
  var data:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(save_path+('.bak' if backup else '')))
- jornada=int(data.jornada);phase=data.phase;selected=data.selected;blocks=int(data.blocks);rank=data.rank;robot_name=data.robot_name
+ jornada=int(data.jornada);phase=data.phase;selected=data.selected;blocks=int(data.blocks);rank=normalize_rank(data.rank);robot_name=data.robot_name
+ if robot_name=='Robot guía':robot_name='Guide robot'
  resources=data.resources;morale=data.morale;cards=data.cards;badges=data.badges;results=data.results;unread_tasks=data.get('unread_tasks',true);minigame_running=false
+ var old_badges:Dictionary={'Luz verde':'Green light','Aire limpio':'Clean air','Rover salvado':'Rover repaired','Equipo a salvo':'Crew safe'}
+ badges=badges.map(func(b):return old_badges.get(b,b))
  changed.emit();return true
 
+func normalize_rank(value:String)->String:
+ return {'Cadete':'Cadet','Comandante':'Commander'}.get(value,value)
+
 func report()->String:
- var lines:='Día %d · %s\nBloques disponibles: %d\n' %[jornada,rank,blocks]
- lines+='Luz verde: '+('concedida' if phase=='complete' else 'en preparación')+'\n'
- lines+='Cartas: %d · Muestras: %d · Registros: %d\n' %[cards.size(),inventory.muestras,inventory.registros]
- lines+='Reservas de agua: %d · Repuestos: %d\n' %[inventory.agua_reserva,inventory.repuesto_reserva]
- lines+='Decisión del agua: '+('reserva utilizada' if choices.get('water_choice',-1)==0 else 'pausa del riego' if choices.has('water_choice') else 'pendiente')+'\n'
- lines+='Rescates: '+(', '.join(rescues) if not rescues.is_empty() else 'ninguno')+'\n'
- lines+='Robot: '+robot_name+'\n\nTareas completadas:\n'
+ var lines:="Day %d · %s\nTime blocks left: %d\n" %[jornada,rank,blocks]
+ lines+="Green light: "+("granted" if phase=='complete' else "in preparation")+'\n'
+ lines+="Cards: %d · Samples: %d · Records: %d\n" %[cards.size(),inventory.muestras,inventory.registros]
+ lines+="Water reserves: %d · Spares: %d\n" %[inventory.agua_reserva,inventory.repuesto_reserva]
+ lines+="Water choice: "+("reserve used" if choices.get('water_choice',-1)==0 else "watering paused" if choices.has('water_choice') else "pending")+'\n'
+ lines+="Crew assists: "+(', '.join(rescues) if not rescues.is_empty() else "none")+'\n'
+ lines+='Robot: '+robot_name+"\n\nCompleted tasks:\n"
  for t in Daily.tasks():
   if t.id in completed:lines+='✓ '+t.title+'\n'
  return lines

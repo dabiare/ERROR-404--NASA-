@@ -84,7 +84,7 @@ func build_room() -> void:
  if room_id in ["engineering","medical","minerals","gym","command"]:
   var posters: Dictionary={"engineering":"MODULO DE INGENIERIA.jpg","medical":"BAHIA MEDICA.jpg","minerals":"GEOLOGIA.jpg","gym":"GYM.jpg","command":"centro de mando.jpg"}
   var poster:=Sprite2D.new()
-  poster.texture=load("res://campaign/references/"+posters[room_id])
+  poster.texture=Art.prop({'engineering':12,'medical':104,'minerals':26,'gym':109,'command':15}[room_id])
   poster.position=Vector2(640,235)
   poster.scale=Vector2(195,100)/poster.texture.get_size()
   poster.modulate=Color(0.7,0.85,1,0.9)
@@ -137,7 +137,9 @@ func build_exterior() -> void:
   child.owner=null
   source.remove_child(child)
   add_child(child)
-  if node_name=="FondoLunar": child.z_index=-100
+  if node_name=="FondoLunar":
+   child.z_index=-100
+   Art.english_sign(child)
   if node_name=="LimitesTerreno":
    for polygon in child.get_children(): exterior_polygons.append(polygon.polygon)
  source.free()
@@ -210,7 +212,7 @@ func populate_npcs() -> void:
   if not gathering and saved.get("room","")==room_id and saved.get("position",[]).size()==2:
    npc.position=safe_position(Vector2(saved.position[0],saved.position[1]))
   add_child(npc)
-  npc.work_label.text="Reunión de equipo" if gathering else Catalog.WORK[npc.identity]
+  npc.work_label.text="Crew briefing" if gathering else Catalog.WORK[npc.identity]
   if not gathering and not entries.is_empty():
    var station: Vector2=entries[0].at
    if room_id=="exterior": station=Vector2(1370,510)
@@ -270,7 +272,7 @@ func _process(delta: float) -> void:
    Mission.save_game()
  for id in state_labels:
   var value:=Mission.item_state(id)
-  state_labels[id].text=value if value!="DISPONIBLE PARA CONSULTA" else ""
+  state_labels[id].text=value if value!="READY TO EXPLORE" else ""
   if id=="vent" and Mission.emergency=="air" or id=="rover" and Mission.emergency=="rover": state_labels[id].modulate=Color("ffae87")
   else: state_labels[id].modulate=Color.WHITE
  for door in doors:
@@ -298,8 +300,8 @@ func _draw() -> void:
    draw_circle(e.at+Vector2(0,12+rise),10,Color("f6ca68"))
    draw_string(font,e.at+Vector2(-4,17+rise),"E",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color("17283d"))
  if room_id=="corridor":
-  draw_string(font,Vector2(365,300),"KILLA WASI  /  HÁBITAT 01",HORIZONTAL_ALIGNMENT_CENTER,550,25,Color("a6ccdf"))
-  draw_string(font,Vector2(365,335),"Acércate a una puerta y pulsa E",HORIZONTAL_ALIGNMENT_CENTER,550,17,Color("778fab"))
+  draw_string(font,Vector2(365,300),"KILLA WASI  /  HABITAT 01",HORIZONTAL_ALIGNMENT_CENTER,550,25,Color("a6ccdf"))
+  draw_string(font,Vector2(365,335),"Walk up to a door and press E",HORIZONTAL_ALIGNMENT_CENTER,550,17,Color("778fab"))
 
 func door_style(selected: bool) -> StyleBoxFlat:
  var style:=StyleBoxFlat.new()

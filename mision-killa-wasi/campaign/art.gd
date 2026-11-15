@@ -30,3 +30,17 @@ static func icon(kind: String) -> Texture2D:
  atlas.region=source.get_image().get_used_rect()
  cache[kind]=atlas
  return atlas
+
+static func english_sign(parent:Node,display_size:=Vector2.ZERO,cover:=false)->void:
+ var at:=Vector2(983,329)
+ var extent:=Vector2(116,22)
+ if display_size!=Vector2.ZERO:
+  var factor:float=maxf(display_size.x/2172.0,display_size.y/724.0) if cover else 1.0
+  var offset:Vector2=(display_size-Vector2(2172,724)*factor)/2
+  at=offset+at*factor;extent*=factor
+ var plate:=ColorRect.new();plate.position=at;plate.size=extent;plate.color=Color('071e42');plate.mouse_filter=Control.MOUSE_FILTER_IGNORE
+ parent.add_child(plate)
+ var title:=Label.new();title.text='LUNAR BASE';title.position=Vector2.ZERO;title.size=extent
+ title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+ title.add_theme_font_size_override('font_size',12);title.add_theme_color_override('font_color',Color('63dce7'))
+ title.mouse_filter=Control.MOUSE_FILTER_IGNORE;plate.add_child(title)
