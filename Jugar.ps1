@@ -8,8 +8,9 @@ if (-not $godotExecutable) {
     if ($godotCommand) { $godotExecutable = $godotCommand.Source }
 }
 if (-not $godotExecutable) {
-    throw 'No se encontró Godot. Abre Godot 4.7.2 e importa el archivo project.godot de esta carpeta.'
+    throw 'No se encontró Godot. Abre Godot 4.7.2 e importa mision-killa-wasi\project.godot.'
 }
-& $godotExecutable --path $PSScriptRoot --editor --import --quit
+$gameProject = Join-Path $PSScriptRoot 'mision-killa-wasi'
+& $godotExecutable --path $gameProject --editor --import --quit
 if ($LASTEXITCODE -ne 0) { throw 'Godot no pudo importar el proyecto.' }
-& $godotExecutable --path $PSScriptRoot
+& $godotExecutable --path $gameProject
