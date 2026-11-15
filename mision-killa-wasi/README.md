@@ -11,6 +11,8 @@ Proyecto principal en Godot **4.7.2**, GDScript y renderizador Compatibility. Eq
 
 El `Jugar.ps1` de la carpeta superior abre este proyecto. La primera importación puede tardar porque incluye los recursos de arte y los fotogramas proporcionados por el equipo. No necesita Internet, plugins, .NET ni plantillas de exportación.
 
+El menú de esta versión muestra **CAMPAÑA DE TRES DÍAS**, **Nueva misión** y **Continuar**. Si tenías abierto el proyecto de la carpeta superior, ciérralo y vuelve a abrirlo: su F5 ahora prepara y lanza esta campaña. Para editarla directamente, importa este archivo `project.godot`.
+
 ## Controles
 
 | Acción | Control |

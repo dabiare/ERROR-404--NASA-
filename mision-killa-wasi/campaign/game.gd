@@ -83,7 +83,7 @@ func show_menu() -> void:
  shade.color=Color(0.025,0.055,0.11,0.62)
  shade.size=Vector2(1280,720)
  menu.add_child(shade)
- ui.label(menu,"ERROR 404  /  EXPEDICIÓN LUNAR",Rect2(70,60,800,35),18,Color("70dfdf"))
+ ui.label(menu,"ERROR 404  /  CAMPAÑA DE TRES DÍAS",Rect2(70,60,800,35),18,Color("70dfdf"))
  ui.label(menu,"MISIÓN\nKILLA WASI",Rect2(65,135,800,210),64)
  ui.label(menu,"Cinco especialistas. Un robot curioso.\nTus primeros tres días al mando.",Rect2(70,355,720,90),25,Color("cedcea"))
  ui.label(menu,"WASD o flechas · E interactuar · R ayuda · M mapa",Rect2(70,650,1050,35),18)

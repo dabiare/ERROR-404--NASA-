@@ -43,3 +43,7 @@ Los diálogos principales, preguntas, opciones y fichas breves suman **2615 pala
 ## Reproducir las pruebas
 
 Las órdenes están en `README.md`. No hace falta conexión a Internet. Las capturas y guardados de prueba no se incluyen en Git; los scripts y todos los recursos necesarios sí están dentro del proyecto.
+
+## Corrección del acceso desde la carpeta principal
+
+El archivo `project.godot` de la raíz apuntaba todavía a la introducción anterior. Ahora su escena inicial prepara y abre el proyecto canónico en `mision-killa-wasi`, manteniendo separados los recursos y autoloads de ambos proyectos. El título de la ventana y el menú identifican la **Campaña de tres días**. Se probó el acceso con `--headless --path . -- --launcher-test`: abrió el proyecto hijo y este completó las **937 comprobaciones, sin fallos**, registradas en `artifacts/launcher_child.log`.

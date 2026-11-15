@@ -15,7 +15,9 @@ También puedes ejecutar **`Jugar.ps1`** desde PowerShell. El lanzador importa y
 
 La guía completa, el guardado y las pruebas están en [mision-killa-wasi/README.md](mision-killa-wasi/README.md). Consulta también el [registro de validación](mision-killa-wasi/VALIDACION.md) y las [fuentes científicas y adaptaciones](mision-killa-wasi/FUENTES_CIENTIFICAS.md).
 
-La introducción anterior permanece en las carpetas `scenes/`, `scripts/` y `assets/` de la raíz, junto con su `project.godot`. Para la campaña nueva importa el archivo que está **dentro de `mision-killa-wasi`**.
+El `project.godot` de la carpeta principal también funciona como acceso: al pulsar F5 prepara y abre la campaña de `mision-killa-wasi` en otra ventana de Godot. Para editar directamente la campaña, importa el proyecto que está **dentro de `mision-killa-wasi`**. El menú nuevo dice **CAMPAÑA DE TRES DÍAS** y ofrece **Nueva misión** y **Continuar**.
+
+Las escenas, scripts y recursos de la introducción anterior se conservan para consulta.
 
 Los diseños originales del equipo, los archivos ZIP y las escenas de la jugabilidad mejorada se conservan. Las incorporaciones de campaña están en `mision-killa-wasi/campaign/`. Rama de trabajo: `codex/tres-primeros-dias`.
 

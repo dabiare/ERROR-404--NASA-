@@ -10,9 +10,9 @@ config_version=5
 
 [application]
 
-config/name="Misión Killa Wasi"
-config/description="Una misión lunar. Cinco especialistas. Tus primeras decisiones."
-run/main_scene="res://scenes/main.tscn"
+config/name="Misión Killa Wasi — acceso a la campaña"
+config/description="Abre la campaña de los tres primeros días desde mision-killa-wasi."
+run/main_scene="res://scenes/campaign_launcher.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [autoload]
